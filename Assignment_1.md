@@ -107,9 +107,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello World') {
+        stage('assignment 1') {
             steps {
-                echo 'Hello, World from Jenkins!'
+                bat 'ECHO Hello World'
             }
         }
     }
@@ -117,7 +117,7 @@ pipeline {
 ```
 🔹 GitHub Repository
 The Jenkinsfile is located in this GitHub repo:
-🔗 https://github.com/Raj123-dev/Devops_Journey_2k25
+🔗 https://github.com/ShivaChouhan/devops_training.git
 
 🔹 CI/CD Pipeline Setup in Jenkins
 To connect Jenkins with the GitHub repo:
@@ -132,7 +132,7 @@ To connect Jenkins with the GitHub repo:
 
 5.SCM: Git
 
-6.Repository URL: https://github.com/Raj123-dev/Devops_Journey_2k25.git
+6.Repository URL: https://github.com/ShivaChouhan/devops_training.git
 
 (If private repo: added GitHub credentials)
 my repo is public so credentials do not required here
