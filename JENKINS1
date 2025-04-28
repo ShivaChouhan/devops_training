@@ -1,0 +1,10 @@
+pipeline{
+    agent any
+    stages{
+        stage('Assignment 1'){
+            steps{
+                bat 'ECHO Hello World'
+            }
+        }
+    }
+}
