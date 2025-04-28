@@ -144,15 +144,15 @@ my repo is public so credentials do not required here
 ✅ Pipeline Output
 The build was triggered, and in the Jenkins console log, I saw:
 
-Started by user Raj Kashyap
+Started by user Shivanand Chouhan
 
-Obtained Jenkinsfile from git https://github.com/Raj123-dev/Devops_Journey_2k25.git
+Obtained JENKINS1 from git https://github.com/ShivaChouhan/devops_training.git
 
 [Pipeline] Start of Pipeline
 
 [Pipeline] node
 
-Running on Jenkins in /var/lib/jenkins/workspace/New_pipeline_helloworld
+Running on Jenkins in C:\ProgramData\Jenkins\.jenkins\workspace\Pipeline_Git1
 
 [Pipeline] {
 
@@ -162,37 +162,44 @@ Running on Jenkins in /var/lib/jenkins/workspace/New_pipeline_helloworld
 
 [Pipeline] checkout
 
-Selected Git installation does not exist. Using Default
-
 The recommended git tool is: NONE
 
-No credentials specified
+using credential Devops-Training
 
- > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/New_pipeline_helloworld/.git # timeout=10
-Fetching changes from the remote Git repository
- 
- > git config remote.origin.url https://github.com/Raj123-dev/Devops_Journey_2k25.git # timeout=10
-Fetching upstream changes from https://github.com/Raj123-dev/Devops_Journey_2k25.git
- 
- > git --version # timeout=10
- 
- > git --version # 'git version 2.43.0'
- 
- > git fetch --tags --force --progress -- https://github.com/Raj123-dev/Devops_Journey_2k25.git +refs/heads/*:refs/remotes/origin/* # timeout=10
- 
- > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Cloning the remote Git repository
 
-Checking out Revision 0d37d105fccd8d6b8fd377c93834656e835bd9c6 (refs/remotes/origin/main)
+Cloning repository https://github.com/ShivaChouhan/devops_training.git
 
- > git config core.sparsecheckout # timeout=10
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe init C:\ProgramData\Jenkins\.jenkins\workspace\Pipeline_Git1 # timeout=10
+Fetching upstream changes from https://github.com/ShivaChouhan/devops_training.git
  
- > git checkout -f 0d37d105fccd8d6b8fd377c93834656e835bd9c6 # timeout=10
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe --version # timeout=10
+ 
+ > git --version # 'git version 2.48.1.windows.1'
+using GIT_ASKPASS to set credentials Devops-Training
+ 
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe fetch --tags --force --progress -- https://github.com/ShivaChouhan/devops_training.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ 
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe config remote.origin.url https://github.com/ShivaChouhan/devops_training.git # timeout=10
+ 
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ 
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe rev-parse "refs/remotes/origin/main^{commit}" # timeout=10
+Checking out Revision e4b4393dcbf8c91c2c192847c75428f90530eafa (refs/remotes/origin/main)
+ 
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe config core.sparsecheckout # timeout=10
+ 
+ > C:\Users\Shivanand.chouhan\AppData\Local\Programs\Git\cmd\git.exe checkout -f e4b4393dcbf8c91c2c192847c75428f90530eafa # timeout=10
 
- > git rev-list --no-walk 6b8b6a2e695a455d22ea1f0f438af4a05fceaca2 # timeout=10
+Commit message: "Create JENKINS1"
+
+First time build. Skipping changelog.
 
 [Pipeline] }
 
 [Pipeline] // stage
+
 
 [Pipeline] withEnv
 
@@ -200,11 +207,14 @@ Checking out Revision 0d37d105fccd8d6b8fd377c93834656e835bd9c6 (refs/remotes/ori
 
 [Pipeline] stage
 
-[Pipeline] { (Hello World)
+[Pipeline] { (Assignment 1)
 
-[Pipeline] echo
+[Pipeline] bat
 
-Hello, World from Jenkins!
+
+C:\ProgramData\Jenkins\.jenkins\workspace\Pipeline_Git1>ECHO Hello World 
+
+Hello World
 
 [Pipeline] }
 
