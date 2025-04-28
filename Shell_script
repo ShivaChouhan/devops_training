@@ -1,0 +1,190 @@
+# Master Shell Scripting - Detailed Notes
+
+## 1. Introduction to Shell Scripting
+- Shell is a command-line interpreter (e.g., Bash, Zsh).
+- Shell scripting is writing a series of commands in a file to automate tasks.
+- Scripts are saved typically with `.sh` extension.
+
+> **Image Suggestion:** Diagram showing  
+> **User → Shell → Kernel → Hardware**
+
+---
+
+## 2. Basic Commands
+- `pwd` — Prints current working directory
+- `ls` — Lists files and directories
+- `cd` — Changes the directory
+- `mkdir` — Creates a directory
+- `touch` — Creates a new empty file
+- `cat` — Displays content of a file
+
+---
+
+## 3. Creating and Running a Script
+1. Create a file:
+   ```bash
+   nano myscript.sh
+   ```
+2. Write inside:
+   ```bash
+   #!/bin/bash
+   echo "Hello World"
+   ```
+3. Save and Exit (`Ctrl + X`, then `Y`, then `Enter`).
+4. Give executable permissions:
+   ```bash
+   chmod +x myscript.sh
+   ```
+5. Run the script:
+   ```bash
+   ./myscript.sh
+   ```
+
+> **Image Suggestion:** Simple flowchart: **Write Script ➔ Give Permission ➔ Execute Script**
+
+---
+
+## 4. Variables
+- Syntax:
+  ```bash
+  name="Prashant"
+  echo $name
+  ```
+- No spaces around `=`
+
+**Types of variables:**
+- User-defined
+- System-defined (like `$USER`, `$HOME`)
+
+---
+
+## 5. Taking Input
+- Example:
+  ```bash
+  echo "Enter your name:"
+  read name
+  echo "Hello $name"
+  ```
+
+---
+
+## 6. Conditional Statements
+- `if` statement:
+  ```bash
+  if [ condition ]
+  then
+    commands
+  fi
+  ```
+- Example:
+  ```bash
+  if [ $age -ge 18 ]
+  then
+    echo "Adult"
+  else
+    echo "Minor"
+  fi
+  ```
+
+**Operators:**
+- `-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`
+
+> **Image Suggestion:** Decision tree diagram for `if-else`
+
+---
+
+## 7. Loops
+- `for` loop:
+  ```bash
+  for i in {1..5}
+  do
+    echo $i
+  done
+  ```
+
+- `while` loop:
+  ```bash
+  count=1
+  while [ $count -le 5 ]
+  do
+    echo $count
+    ((count++))
+  done
+  ```
+
+> **Image Suggestion:** Loop flowchart: Start ➔ Condition ➔ Execute ➔ Repeat ➔ End
+
+---
+
+## 8. Functions
+- Syntax:
+  ```bash
+  function name {
+    commands
+  }
+  # or
+  name() {
+    commands
+  }
+  ```
+- Example:
+  ```bash
+  greet() {
+    echo "Hello $1"
+  }
+  greet "Prashant"
+  ```
+
+---
+
+## 9. Command Line Arguments
+- `$0` — Script name
+- `$1`, `$2`, … — First argument, second argument, etc.
+- `$#` — Number of arguments
+- `$@` — All arguments
+
+Example:
+```bash
+echo "Script Name: $0"
+echo "First Argument: $1"
+```
+
+---
+
+## 10. Exit Status
+- Every command returns an exit status:
+  - `0` for success
+  - Non-zero for error
+- Check using `$?`
+
+Example:
+```bash
+ls file.txt
+echo $?
+```
+
+---
+
+## 11. Useful Shell Commands
+- `grep` — Search text
+- `awk` — Text processing
+- `sed` — Stream editor
+- `cut`, `sort`, `uniq` — Text manipulation
+- `tee` — Read & Write output simultaneously
+
+---
+
+## 12. Best Practices
+- Always start scripts with `#!/bin/bash`
+- Comment your scripts (`# This is a comment`)
+- Handle errors properly
+- Use meaningful variable and function names
+
+---
+
+# 📌 Important Tips
+- **Practice regularly** by automating small daily tasks.
+- **Debug** with `bash -x myscript.sh` (shows command execution step-by-step).
+- **Indent** code properly to increase readability.
+
+---
