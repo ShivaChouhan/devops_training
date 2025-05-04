@@ -14,14 +14,15 @@ pipeline {
             }
         }
 
-        stage('Serve HTML Page') {
-            steps {
-                bat '''
-                echo Starting simple web server on port 8000...
-                "C:\\Users\\Shivanand.chouhan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe" -m http.server 8000
-                '''
-                echo 'HTML Calculator is available at: http://localhost:8000/calculator.html'
-            }
-        }
+       stage('Serve HTML Page') {
+    steps {
+        bat '''
+        echo Starting simple web server on port 8000...
+        cd Jenkis_Assignment1
+        start /B python -m http.server 8000
+        '''
+        echo 'HTML Calculator is available at: http://localhost:8000/calculator.html'
+    }
+}
     }
 }
