@@ -1,7 +1,7 @@
-# Use a Debian-based OpenJDK image with GUI support
+# Use a Debian-based OpenJDK image with APT support
 FROM openjdk:17-jdk-slim
 
-# Install required GUI libraries
+# Install necessary libraries for GUI apps
 RUN apt-get update && apt-get install -y \
     libxext6 \
     libxrender1 \
@@ -10,17 +10,17 @@ RUN apt-get update && apt-get install -y \
     libgtk2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy source files into the container
+# Copy source files
 COPY . /app
 
-# Compile the Java source file
+# Compile the Java application
 RUN javac SnakeLadder.java
 
-# Set the display environment variable for X11 forwarding
+# Set display environment variable
 ENV DISPLAY=:0
 
-# Run the Java application
+# Run the Java GUI application
 CMD ["java", "SnakeLadder"]
