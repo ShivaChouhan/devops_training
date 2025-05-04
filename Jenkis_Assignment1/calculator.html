@@ -1,0 +1,81 @@
+<html>
+<head> 
+<script type="text/javascript">
+
+function removechar()
+{
+var a=document.getElementById("t1").value;
+var b='';
+for(i=0;i<a.length-1;i++)
+{
+d=a.charAt(i);
+b+=d;
+}
+document.getElementById("t1").value=b;
+}
+
+</script>
+<link rel="stylesheet" href="calci.css" />
+</head>
+
+
+<body>
+<form name="f">
+<center>
+<table border='2'  id="data" >
+<caption><font size='5'>CALCULATOR</font> </caption>
+<div >
+<tr>
+<td colspan="3"><input type="text" id="t1" class="t1" name="t2"></td>
+</tr>
+</div >
+<div>
+<tr>
+<td><input type="button" value="CLR"  class="b" onclick="f.t2.value = ''"></td>
+<td><input type="button" value="B"  class="b" onclick="removechar()"></td>
+<td><input type="button" value="."  class="b" onclick="f.t2.value += '.'"></td>
+</tr>
+</div>
+<div>
+<tr>
+<th><input type="button" value="1"  class="b" onclick="f.t2.value += '1'"></th>
+<th><input type="button" value="2"  class="b" onclick="f.t2.value += '2'"></th>
+<th><input type="button" value="3"  class="b" onclick="f.t2.value += '3'"></th>
+</tr>
+</div>
+<div>
+<tr>
+<th><input type="button" value="4"  class="b" onclick="f.t2.value += '4'"></th>
+<th><input type="button" value="5"  class="b" onclick="f.t2.value += '5'"></th>
+<th><input type="button" value="6"  class="b" onclick="f.t2.value += '6'"></th>
+</tr>
+</div>
+<div>
+<tr>
+<th><input type="button" value="7"  class="b" onclick="f.t2.value += '7'"></th>
+<th><input type="button" value="8"  class="b" onclick="f.t2.value += '8'"></th>
+<th><input type="button" value="9"  class="b" onclick="f.t2.value += '9'"></th>
+</tr>
+</div>
+<div>
+<tr>
+<th><input type="button" value="+"  class="b" onclick="f.t2.value += '+'"></th>
+<th><input type="button" value="0"  class="b" onclick="f.t2.value += '0'"></th>
+<th><input type="button" value="-"  class="b" onclick="f.t2.value += '-'"></th>
+</tr>
+</div>
+<div>
+<tr>
+<td><input type="button" value="*"  class="b" onclick="f.t2.value += '*'"></td>
+<td><input type="button" value="=" onclick="f.t2.value = eval(f.t2.value)" class="b"></td>
+<td><input type="button" value="/" onclick="f.t2.value += '/'" class="b"></td>
+</tr>
+</div>
+</tr>
+
+
+</table>
+</center>
+</form>
+</body>
+</html>

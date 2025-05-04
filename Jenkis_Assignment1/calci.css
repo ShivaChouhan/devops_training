@@ -1,0 +1,49 @@
+body
+{
+background-image:url('a2.jpg');
+/* background-color:rgba(0,0,0); */
+}
+
+
+#mymenu
+{
+background-color:rgba(0,0,0,0.5);
+color:white;
+text-align:right;
+}
+
+
+#data
+{
+margin-top:100px;
+}
+
+.t1
+{
+	font-size:20px;
+	text-align:right;
+	width:250px;
+	height:50px;
+    border-radius:50px;
+}
+
+.b
+{
+width:80px;
+height:30px;
+background:linear-gradient(to right,red,black);
+color:white;
+}
+
+.b:hover
+{
+	background:linear-gradient(to right,black,red);
+}
+
+table
+{
+/* text-align:right; */
+color:white;
+background-color:rgba(0,0,0,0.5);
+box-shadow:20px 20px 20px black;
+}
