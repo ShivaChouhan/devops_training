@@ -16,6 +16,8 @@ pipeline {
 
         stage('Serve HTML Page or File') {
             steps {
+                bat 'where python'
+                bat 'python --version'
                 bat '''
                 echo Starting Python web server on port 8000...
                 cd Jenkis_Assignment1
