@@ -1,0 +1,28 @@
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/ShivaChouhan/devops_training.git'
+            }
+        }
+
+        stage('List Project Files') {
+            steps {
+                sh 'ls -l'
+            }
+        }
+
+        stage('Serve HTML Page') {
+            steps {
+                sh '''
+                echo "Starting simple web server on port 8000..."
+                nohup python3 -m http.server 8000 &
+                '''
+                echo 'HTML Calculator is available at: http://<jenkins-ip>:8000/calculator.html'
+            }
+        }
+    }
+}
