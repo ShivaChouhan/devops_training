@@ -1,0 +1,26 @@
+# Use a base image with Java and GUI support (X11)
+FROM openjdk:17
+
+# Install necessary libraries for GUI
+RUN apt-get update && apt-get install -y \
+    libxext6 \
+    libxrender1 \
+    libxtst6 \
+    libxi6 \
+    libgtk2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy all files into the container
+COPY . /app
+
+# Compile the Java source
+RUN javac SnakeLadder.java
+
+# Set display to use host X server
+ENV DISPLAY=:0
+
+# Run the application
+CMD ["java", "SnakeLadder"]
