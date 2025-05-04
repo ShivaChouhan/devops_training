@@ -14,14 +14,14 @@ pipeline {
             }
         }
 
-       stage('Serve HTML Page') {
-    steps {
-       bat '''
-cd Jenkis_Assignment1
-powershell -Command "Start-Process python -ArgumentList '-m','http.server','8000'"
-'''
-        echo 'HTML Calculator is available at: http://localhost:8000/calculator.html'
+        stage('Serve HTML Page') {
+            steps {
+                bat '''
+                echo Starting Python web server on port 8000...
+                cd Jenkis_Assignment1
+                powershell -Command "Start-Process python -ArgumentList '-m','http.server','8000'"
+                '''
+                echo '✅ HTML Calculator should be available at: http://localhost:8000/calculator.html'
+            }
+        }
     }
-}
-    }
-}
