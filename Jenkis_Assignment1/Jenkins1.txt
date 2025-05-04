@@ -16,11 +16,10 @@ pipeline {
 
        stage('Serve HTML Page') {
     steps {
-        bat '''
-        echo Starting simple web server on port 8000...
-        cd Jenkis_Assignment1
-        start /B python -m http.server 8000
-        '''
+       bat '''
+cd Jenkis_Assignment1
+powershell -Command "Start-Process python -ArgumentList '-m','http.server','8000'"
+'''
         echo 'HTML Calculator is available at: http://localhost:8000/calculator.html'
     }
 }
