@@ -35,15 +35,15 @@ class JPdemo extends JPanel implements ActionListener
 		img2=new ImageIcon("board.jpeg");
 		img3=new ImageIcon("sl.jpeg");
 		img4=new ImageIcon("start.jpeg");
-		img11=new ImageIcon(startgif.gif");
-		img5=new ImageIcon(aboutgif.gif");
+		img11=new ImageIcon("start.jpeg");
+		img5=new ImageIcon("about.jpeg");
 		img6=new ImageIcon("reset.jpeg");
 		
 		img7=new ImageIcon("player1.jpeg");
 		img8=new ImageIcon("player2.jpeg");
 		
 		img9=new ImageIcon("dice.jpeg");
-		img10=new ImageIcon(dicegif.gif");
+		img10=new ImageIcon("dicegif.gif");
 	
 		Font front=new Font("Algerian",Font.BOLD,20);
 		
