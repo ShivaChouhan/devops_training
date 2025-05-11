@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: {{ include "simple-webapp.fullname" . }}
   labels:
-    {{- include "simple-webapp.labels" . | nindent 4 }}
+    app: {{ include "simple-webapp.name" . }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
