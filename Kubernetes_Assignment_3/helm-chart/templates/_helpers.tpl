@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Define the template for the "simple-webapp.name" to use in ServiceAccount
+*/}}
+{{- define "simple-webapp.name" -}}
+{{ .Chart.Name }}
+{{- end }}
