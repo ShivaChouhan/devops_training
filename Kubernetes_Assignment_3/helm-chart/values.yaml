@@ -1,13 +1,21 @@
 replicaCount: 2
+
 image:
   repository: simple-webapp
   tag: latest
   pullPolicy: IfNotPresent
+
 service:
   type: NodePort
   port: 80
-nodePort: 30007
-serviceAccount:
-  create: true
-  name: ""
+  nodePort: 31000
 
+postgres:
+  enabled: true
+  image: postgres:13
+  password: mysecretpassword
+  user: myuser
+  database: mydb
+  pvc:
+    name: simple-webapp-pvc
+    size: 1Gi
