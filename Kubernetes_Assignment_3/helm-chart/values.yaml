@@ -1,9 +1,35 @@
 replicaCount: 2
+
 image:
   repository: simple-webapp
   tag: latest
   pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: webapp-sa
+
 service:
   type: NodePort
   port: 80
   nodePort: 30007
+
+resources: 
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+tolerations: []
+
+nodeSelector: {}
+
+affinity: {}
