@@ -1,15 +1,18 @@
-replicaCount: 2
+# Add this section
+serviceAccount:
+  create: false
+  name: ""
 
+# Rest of your existing values
+replicaCount: 2
 image:
   repository: simple-webapp
   tag: latest
   pullPolicy: IfNotPresent
-
 service:
   type: NodePort
   port: 80
   nodePort: 31000
-
 postgres:
   enabled: true
   image: postgres:13
