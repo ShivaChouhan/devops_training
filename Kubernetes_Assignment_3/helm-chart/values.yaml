@@ -22,5 +22,4 @@ postgres:
   pvc:
     name: simple-webapp-pvc
     size: 1Gi
-ingress:
-  enabled: false
+
