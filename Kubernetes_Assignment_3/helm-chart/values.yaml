@@ -4,6 +4,7 @@ autoscaling:
 
 serviceAccount:
   create: false
+  name: "" 
 
 ingress:
   enabled: false
