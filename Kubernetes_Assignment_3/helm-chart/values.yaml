@@ -29,7 +29,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 ingress:
-  enabled: false
+  enabled: true
   annotations: {}
   hosts:
     - host: webapp.local
