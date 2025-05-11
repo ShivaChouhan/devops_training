@@ -1,31 +1,23 @@
-# Default values for simple-webapp-chart
-replicaCount: 2
+# Add these sections if missing
+autoscaling:
+  enabled: false
 
+serviceAccount:
+  create: false
+
+ingress:
+  enabled: false
+
+# Your existing values
+replicaCount: 2
 image:
   repository: simple-webapp
   tag: latest
   pullPolicy: IfNotPresent
-
 service:
   type: NodePort
   port: 80
   nodePort: 31000
-
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-  hosts:
-    - host: simple-webapp.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-  #  - secretName: simple-webapp-tls
-  #    hosts:
-  #      - simple-webapp.local
-
 postgres:
   enabled: true
   image: postgres:13
@@ -35,6 +27,3 @@ postgres:
   pvc:
     name: simple-webapp-pvc
     size: 1Gi
-
-serviceAccount:
-  create: false
