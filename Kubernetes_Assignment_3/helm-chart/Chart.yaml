@@ -1,0 +1,5 @@
+apiVersion: v2
+name: simple-webapp-chart
+description: A Helm chart for Simple WebApp
+version: 0.1.0
+appVersion: "1.0"
