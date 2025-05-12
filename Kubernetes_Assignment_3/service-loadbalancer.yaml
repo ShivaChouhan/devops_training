@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: simple-webapp-lb
+  name: simple-webapp-loadbalancer  # Changed from webapp-loadbalancer
 spec:
   type: LoadBalancer
   selector:
