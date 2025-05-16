@@ -1,0 +1,21 @@
+replicaCount: 1
+image:
+  repository: shivachouhan/snake-ladder-game
+  tag: mongo_app_02
+  pullPolicy: IfNotPresent
+
+mongodb:
+  image: mongo:4.4.17
+  host: service-mongodb
+  port: 27017
+
+persistentVolume:
+  storageClass: standard
+  accessModes:
+    - ReadWriteOnce
+  size: 500M
+  path: /data/
+
+service:
+  type: LoadBalancer
+  port: 8080
