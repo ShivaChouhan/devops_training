@@ -4,9 +4,9 @@ metadata:
   name: host-pvc
 spec:
   volumeName: host-pv
-  storageClassName: {{ .Values.persistentVolume.storageClass }}
+  storageClassName: standard
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.persistentVolume.size }}
+      storage: 500M

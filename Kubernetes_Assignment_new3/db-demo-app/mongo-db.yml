@@ -17,9 +17,16 @@ spec:
         app: mongo-app
     spec:
       containers:
-      - name: mongo-app
-        # Run this image
-        image: mongo:4.4.18
+       - name: mongo-app
+         # Run this image
+         image: mongo:4.4.18
+         volumeMounts:
+            - mountPath: /data/db
+              name: mongo-vol
+      volumes:
+       - name: mongo-vol
+         persistentVolumeClaim:
+           claimName: host-pvc
 
 ---
 

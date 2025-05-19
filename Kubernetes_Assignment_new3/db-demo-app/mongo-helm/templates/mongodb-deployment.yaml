@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mongo-app
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: mongo-app
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: mongo-app
-          image: {{ .Values.mongodb.image }}
+          image: {{ .Values.mongo.image }}
           volumeMounts:
             - mountPath: /data/db
               name: mongo-vol
@@ -22,15 +22,3 @@ spec:
         - name: mongo-vol
           persistentVolumeClaim:
             claimName: host-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: service-mongodb
-spec:
-  selector:
-    app: mongo-app
-  ports:
-    - name: tcp
-      port: {{ .Values.mongodb.port }}
-      targetPort: {{ .Values.mongodb.port }}
