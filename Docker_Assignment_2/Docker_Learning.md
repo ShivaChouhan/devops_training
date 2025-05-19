@@ -404,3 +404,50 @@ sudo docker exec -it <container_id_or_name> bash	Access the shell of a running c
 sudo docker logs <container_id_or_name>	View logs from a container.
 
 
+# Use Docker Volumes and Networks in a Sample Application
+
+Docker Volumes (Persistent Storage)
+
+Kya Hai?
+
+
+Containers temporary hote hain, agar aap data permanently save karna chahte ho, toh volumes use karein.
+
+Kaise Use Karein?
+
+
+bash
+
+docker run -d -v /data --name my-container my-image
+
+Ya host machine se mount karein:
+
+
+bash
+
+docker run -d -v /host/folder:/container/folder my-image
+
+Docker Networks (Multi-Container Communication)
+
+Kya Hai?
+
+Agar aapke paas multiple containers hain (e.g., web app + database), toh unhe network se connect karna padega.
+
+Kaise Banayein?
+
+
+bash
+
+docker network create my-network
+
+Phir containers ko us network se attach karein:
+
+bash
+
+docker run -d --network my-network --name my-db mysql
+
+docker run -d --network my-network --name my-app my-web-app
+
+
+
+
