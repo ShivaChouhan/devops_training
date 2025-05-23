@@ -79,14 +79,14 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 Then, I opened my browser and went to [http://localhost:3000](http://localhost:3000).
 
 - **Grafana Login Page:**
-  ![Grafana Login Page](Images/grafana_login.png)
+  ![Grafana Login Page](images/grafana_login.png)
 
 I logged in with:
 - **Username:** `admin`
 - **Password:** `prom-operator`
 
 - **Grafana Home Page:**
-  ![Grafana Home Page](Images/grafana_home.png)
+  ![Grafana Home Page](images/grafana_home.png)
   
 ---
 ## 5. I Accessed Prometheus UI
@@ -117,7 +117,7 @@ kubectl port-forward svc/prometheus-kube-prometheus-prometheus -n monitoring 909
 Once it was running, I opened http://localhost:9090 in my browser.
 
 - **Prometheus Home Page:**
-  ![Grafana Home Page](Images/prometheus-home.png)
+  ![Grafana Home Page](images/prometheus-home.png)
 ---
 ## 6. Useful Commands I Used
 - To list all services:
