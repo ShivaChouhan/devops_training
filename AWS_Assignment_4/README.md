@@ -122,7 +122,7 @@ Run this command to deploy the CloudFormation template:
 
 ```powershell
 aws cloudformation create-stack `
-  --stack-name HelloWorldAppStack `
+  --stack-name Hello-World-Stack-v2 `
   --template-body file://template.yaml `
   --parameters ParameterKey=EC2KeyPair,ParameterValue=hello-world-cloudformation `
   --capabilities CAPABILITY_NAMED_IAM
@@ -152,7 +152,7 @@ Expected output:
 ### Check Stack Outputs
 
 ```powershell
-aws cloudformation describe-stacks --stack-name HelloWorldAppStack `
+aws cloudformation describe-stacks --stack-name Hello-World-Stack-v2 `
   --query 'Stacks[0].Outputs'
 ```
 
