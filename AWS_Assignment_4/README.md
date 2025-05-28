@@ -149,6 +149,14 @@ Expected output:
 
    ![Lambda Function Created](./images/lambda.png)
 
+4. Verify VPC:
+
+   ![VPC Created](./images/vpc.png)
+
+
+5. Verify S3bucket:
+
+   ![S3bucket Created](./images/s3buc.png)
 ### Check Stack Outputs
 
 ```powershell
