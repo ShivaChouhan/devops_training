@@ -3,7 +3,7 @@
 
 This project demonstrates how to use AWS CloudFormation to provision and manage AWS resources including EC2 instances and Lambda functions. The template creates a simple "Hello World" application with an EC2 instance and a Lambda function that logs "Hello World".
 
-![Stack Created Successfully](./images/stack_created.png)
+![Stack Created Successfully](./images/stack.png)
 
 ## Project Overview
 
@@ -139,15 +139,15 @@ Expected output:
 
 1. Check the stack status in the AWS CloudFormation console:
 
-   ![Stack Created](./images/stack_created.png)
+   ![Stack Created](./images/stack.png)
 
 2. Verify EC2 instance creation in the EC2 console:
 
-   ![EC2 Instance Created](./images/ec2_instance_created.png)
+   ![EC2 Instance Created](./images/ec2.png)
 
 3. Verify Lambda function creation in the Lambda console:
 
-   ![Lambda Function Created](./images/lambda_function_created.png)
+   ![Lambda Function Created](./images/lambda.png)
 
 ### Check Stack Outputs
 
