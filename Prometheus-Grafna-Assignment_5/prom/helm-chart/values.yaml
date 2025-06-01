@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: flask-app
+  tag: latest
+  pullPolicy: Never
+
+
+service:
+  type: NodePort
+  port: 5000
+
+
+# Prometheus scrape config example (add this to your Prometheus server's prometheus.yml, not here):
+#
+# scrape_configs:
+#   - job_name: 'flask-app'
+#     metrics_path: /metrics
+#     static_configs:
+#       - targets: ['192.168.49.2:30017']
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  storageClass: ""
+  name: users-db-pvc

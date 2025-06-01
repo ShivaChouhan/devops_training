@@ -1,0 +1,40 @@
+USER-SUPPLIED VALUES:
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+  enabled: true
+prometheus:
+  prometheusSpec:
+    additionalPrometheusRules:
+    - groups:
+      - name: flask-app-alerts
+        rules:
+        - alert: FlaskAppDown
+          annotations:
+            description: The Flask app at {{ $labels.instance }} is not reachable
+              by Prometheus for 30 seconds.
+            summary: Flask app instance is down
+          expr: up{job="flask-app", instance="192.168.49.2:30675"} == 0
+          for: 30s
+          labels:
+            severity: critical
+            team: devops
+      name: flask-app-alerts
+    additionalScrapeConfigsSecret:
+      enabled: true
+      key: additional-scrape-configs.yaml
+      name: additional-scrape-configs
+    ruleSelector:
+      matchLabels:
+        release: prometheus
+    volumeMounts:
+    - mountPath: /etc/prometheus/scrape_configs
+      name: additional-scrape-configs
+      readOnly: true
+    volumes:
+    - name: additional-scrape-configs
+      secret:
+        secretName: additional-scrape-configs

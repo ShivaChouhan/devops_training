@@ -1,0 +1,16 @@
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigsSecret:
+      enabled: true
+      name: additional-scrape-configs
+      key: additional-scrape-configs.yaml
+    # Add volume mount if not automatically created
+    volumes:
+      - name: additional-scrape-configs
+        secret:
+          secretName: additional-scrape-configs
+    volumeMounts:
+      - name: additional-scrape-configs
+        mountPath: /etc/prometheus/scrape_configs
+        readOnly: true
+
