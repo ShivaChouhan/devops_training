@@ -218,6 +218,13 @@ kubectl rollout restart statefulset alertmanager-prometheus-kube-prometheus-aler
 
 ---
 
+### 5. Update helm
+
+# Restart Alertmanager StatefulSet
+helm repo update
+```
+---
+
 ### 6. Scale Flask App Deployment (for testing alerts)
 
 ```sh
