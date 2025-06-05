@@ -448,6 +448,54 @@ docker run -d --network my-network --name my-db mysql
 
 docker run -d --network my-network --name my-app my-web-app
 
+# Docker network example
 
+For these 2 images
+1. shivachouhan/snake-ladder-game   mongo_app_02   fed3bba54732   2 weeks ago    1.15GB
+2. mongo                            4.4.18         f0bbeaaea8c3   2 years ago    438MB
+
+1. Create a Docker Network
+
+docker network create my-app-net
+
+2.docker run -d --name mongo --network my-app-net -p 27017:27017 mongo:4.4.18
+
+docker run -d: Runs the container in detached (background) mode.
+
+--name mongo: Names the container mongo.
+
+--network my-app-net: Connects the container to the custom Docker network my-app-net.
+
+-p 27017:27017: Maps port 27017 on your host to port 27017 in the container (MongoDB’s default port).
+
+mongo:4.4.18: Uses the official MongoDB image, version 4.4.18.
+
+Result:
+
+Starts a MongoDB server accessible to other containers on my-app-net as mongo, and to your host on port 27017.
+ 
+ 3. Run Node.js App Container
+docker run -d --name node-app --network my-app-net -p 3000:3000 \
+  -e MONGO_HOST=mongo \
+  -e MONGO_PORT=27017 \
+  shivachouhan/snake-ladder-game:mongo_app_02
+
+docker run -d: Runs the container in detached mode.
+
+--name node-app: Names the container node-app.
+
+--network my-app-net: Connects the container to the same custom Docker network.
+
+-p 3000:3000: Maps port 3000 on your host to port 3000 in the container (your Node.js app’s port).
+
+-e MONGO_HOST=mongo: Sets the environment variable MONGO_HOST to mongo (the name of the MongoDB container).
+
+-e MONGO_PORT=27017: Sets the environment variable MONGO_PORT to 27017.
+
+shivachouhan/snake-ladder-game:mongo_app_02: Uses your Node.js app image.
+
+Result:
+
+Starts your Node.js app, which connects to MongoDB at mongo:27017 (using Docker’s internal DNS), and exposes the app on http://localhost:3000.
 
 
