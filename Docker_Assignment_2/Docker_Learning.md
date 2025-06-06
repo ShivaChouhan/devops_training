@@ -454,7 +454,8 @@ For these 2 images
 1. shivachouhan/snake-ladder-game   mongo_app_02   fed3bba54732   2 weeks ago    1.15GB
 2. mongo                            4.4.18         f0bbeaaea8c3   2 years ago    438MB
 
-1. Create a Docker Network
+
+1.Create a Docker Network
 
 docker network create my-app-net
 
