@@ -40,7 +40,7 @@ sudo systemctl stop datadog-agent   # Stop the agent
 sudo systemctl status datadog-agent # Check agent status
 ```
 
-![Datadog Host Installation](./Images/host machines.PNG)
+![Datadog Host Installation](https://github.com/ShivaChouhan/devops_training/blob/main/Datadog_Assignment_6/Images/host%20machines.png)
 
 Enabled service monitoring by modifying the `datadog.yaml` configuration file.
 
@@ -57,7 +57,7 @@ process_config:
     enabled: true
 ```
 
-![Host Integration Status](host%20Integrations.png)
+![Host Integration Status](https://github.com/ShivaChouhan/devops_training/blob/main/Datadog_Assignment_6/Images/host%20Integrations.png)
 
 ## Docker Integration
 ### Configure Docker Group:
@@ -74,14 +74,13 @@ instances:
     - url: "unix://var/run/docker.sock"
 ```
 
-![Docker Containers Monitoring](docker%20containers.png)
+![Docker Containers Monitoring](https://github.com/ShivaChouhan/devops_training/blob/main/Datadog_Assignment_6/Images/docker%20containers.png)
 
 ## Jenkins Integration
 Integrated Jenkins with Datadog for pipeline monitoring by:
 1. Installing the Datadog plugin in Jenkins
 2. Configuring the plugin with Datadog site and API key
 
-![Jenkins Datadog Plugin Configuration](datadog%20plugin.png)
 
 ## Minikube Cluster Integration
 ### Helm Setup Commands:
@@ -117,7 +116,9 @@ clusterAgent:
   replicas: 2
 ```
 
-![Kubernetes Pods Monitoring](kubernetes%20pods.png)
+![Kubernetes Pods Monitoring](https://github.com/ShivaChouhan/devops_training/blob/main/Datadog_Assignment_6/Images/kubernetes%20pods.png)
+
+![Kubernetes Pods Monitoring](https://github.com/ShivaChouhan/devops_training/blob/main/Datadog_Assignment_6/Images/flask-app%20pod%20resource%20view.png)
 
 ## Alert Configuration
 Configured an alert to monitor the Flask application pod status. The alert triggers when:
@@ -136,12 +137,8 @@ Alert message includes:
 - Cluster name
 - Timestamp of the event
 
-![Alert Configuration Example](alert-configuration.png)
+![Alert Overview](https://github.com/ShivaChouhan/devops_training/blob/main/Datadog_Assignment_6/Images/Alert_status.png)
 
-## Verification
-All integrated services are visible in the Datadog host list:
-
-![Host List](host%20Integrations.png)
 
 ## Troubleshooting
 For any integration issues:
