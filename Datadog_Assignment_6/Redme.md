@@ -40,7 +40,7 @@ sudo systemctl stop datadog-agent   # Stop the agent
 sudo systemctl status datadog-agent # Check agent status
 ```
 
-![Datadog Host Installation](./Images/host machines.png)
+![Datadog Host Installation](./Images/host machines.PNG)
 
 Enabled service monitoring by modifying the `datadog.yaml` configuration file.
 
