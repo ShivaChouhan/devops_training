@@ -24,7 +24,6 @@ Datadog is a comprehensive monitoring and analytics platform that provides full-
 ## Datadog Account Setup
 First, create a free tier Datadog account at [Datadog's website](https://www.datadoghq.com/).
 
-![Datadog Host Installation Options](host.png)
 
 ## Ubuntu (Linux) Host Integration
 ### Installation Command:
@@ -40,6 +39,8 @@ sudo systemctl start datadog-agent  # Start the agent
 sudo systemctl stop datadog-agent   # Stop the agent
 sudo systemctl status datadog-agent # Check agent status
 ```
+
+![Datadog Host Installation](./Images/host machines.png)
 
 Enabled service monitoring by modifying the `datadog.yaml` configuration file.
 
