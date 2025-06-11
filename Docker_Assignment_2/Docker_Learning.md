@@ -476,10 +476,9 @@ Result:
 Starts a MongoDB server accessible to other containers on my-app-net as mongo, and to your host on port 27017.
  
  3. Run Node.js App Container
-docker run -d --name node-app --network my-app-net -p 3000:3000 \
-  -e MONGO_HOST=mongo \
-  -e MONGO_PORT=27017 \
-  shivachouhan/snake-ladder-game:mongo_app_02
+
+docker run -d --name node-app --network my-app-net -p 3000:3000   -e MONGO_HOST=mongo   -e MONGO_PORT=27017   shivachouhan/snake-ladder-game:mongo_app_02
+
 
 docker run -d: Runs the container in detached mode.
 
