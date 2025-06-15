@@ -1,6 +1,6 @@
 // Jenkinsfile for hello-springboot-app
 pipeline {
-    agent any
+    agent java-node
     environment {
         DOCKERHUB_CREDENTIALS = credentials('valaxy-dockerhub')
     }
