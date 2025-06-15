@@ -2,7 +2,7 @@
 pipeline {
     agent java-node
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('valaxy-dockerhub')
+        DOCKERHUB_CREDENTIALS = credentials('shivachouhan-dockerhub')
     }
     stages {
         stage('SCM Checkout') {
