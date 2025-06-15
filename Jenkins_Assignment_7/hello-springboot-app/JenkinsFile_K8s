@@ -1,8 +1,5 @@
 pipeline {
     agent { label "java-node" }
-    environment {
-        // No DockerHub credentials needed since we use Minikube's local registry
-    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -11,26 +8,26 @@ pipeline {
         }
         stage('Build JAR') {
             steps {
-                // dir('Jenkins_Assignment_7/hello-springboot-app') {
+                dir('Jenkins_Assignment_7/hello-springboot-app') {
                     sh 'mvn clean package'
-                // }
+                }
             }
         }
         stage('Build Docker Image') {
             steps {
-                // dir('Jenkins_Assignment_7/hello-springboot-app') {
+                dir('Jenkins_Assignment_7/hello-springboot-app') {
                     // Use Minikube's Docker daemon
                     sh 'eval $(minikube docker-env) && docker build -t hello-springboot-app:latest .'
-                // }
+                }
             }
         }
         stage('Deploy to Minikube') {
             steps {
-                // dir('Jenkins_Assignment_7/hello-springboot-app') {
+                dir('Jenkins_Assignment_7/hello-springboot-app') {
 
                     // Apply deployment and service to Minikube
                     sh 'kubectl apply -f deployment.yaml'
-                // }
+                }
             }
         }
     }
