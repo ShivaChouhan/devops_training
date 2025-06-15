@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: hello-springboot-app
-        image: hello-springboot-app:latest
+        image: shivachouhan/snake-ladder-game:hello-springboot-app
         ports:
         - containerPort: 8080
 ---
