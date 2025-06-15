@@ -42,7 +42,7 @@ stringData:
       group_by: ['alertname']
       group_wait: 8s
       group_interval: 5m
-      repeat_interval: 12h
+      repeat_interval: 1m
       receiver: 'email-notifications'
       routes:
       - match:

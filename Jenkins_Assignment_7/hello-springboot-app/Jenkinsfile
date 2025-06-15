@@ -1,0 +1,39 @@
+// Jenkinsfile for hello-springboot-app
+pipeline {
+    agent any
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('valaxy-dockerhub')
+    }
+    stages {
+        stage('SCM Checkout') {
+            steps {
+                git 'https://github.com/your-username/hello-springboot-app.git'
+            }
+        }
+        stage('Build JAR') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t shivachouhan/snake-ladder-game:hello-springboot-app_$BUILD_NUMBER .'
+            }
+        }
+        stage('Login to DockerHub') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Push Image') {
+            steps {
+                sh 'docker push shivachouhan/snake-ladder-game:hello-springboot-app_$BUILD_NUMBER'
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker logout'
+        }
+    }
+}
