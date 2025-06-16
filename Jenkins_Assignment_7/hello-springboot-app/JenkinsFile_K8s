@@ -23,6 +23,7 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 dir('Jenkins_Assignment_7/hello-springboot-app') {
+                    echo 'Deploying to Minikube...'
 
                     // Apply deployment and service to Minikube
                     sh 'kubectl apply -f deployment.yaml'
