@@ -1,0 +1,34 @@
+name: Java Docker K8s Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        working-directory: Jenkins_Assignment_7/hello-springboot-app
+        run: mvn clean package
+
+      - name: Build Docker image
+        working-directory: Jenkins_Assignment_7/hello-springboot-app
+        run: |
+          eval $(minikube docker-env)
+          docker build -t hello-springboot-app:latest .
+
+      - name: Deploy to Minikube
+        working-directory: Jenkins_Assignment_7/hello-springboot-app
+        run: |
+          kubectl apply -f deployment.yaml
+          echo "Service URL:"
+          minikube service hello-springboot-app-service --url || true
