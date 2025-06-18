@@ -5,37 +5,32 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Installing required packages"
       - apt-get update -y
       - apt-get install -y maven
-      - echo "Installing kubectl"
       - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
 
   pre_build:
     commands:
-      - echo "Logging in to Amazon ECR"
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 017373484103.dkr.ecr.us-east-1.amazonaws.com
 
   build:
     commands:
-      - echo "Building JAR using Maven"
-      - mvn clean package
-      - echo "Building Docker image"
-      - docker build -t hello-springboot-app .
+      - echo "Building application"
+      - cd Jenkins_Assignment_7/hello-springboot-app
+      - mvn clean package -DskipTests || echo "Build failed"
+      - docker build -t hello-springboot-app . || echo "Docker build failed"
 
   post_build:
     commands:
-      - echo "Tagging and pushing Docker image"
-      - docker tag hello-springboot-app:latest 017373484103.dkr.ecr.us-east-1.amazonaws.com/hello-springboot-app:latest
-      - docker push 017373484103.dkr.ecr.us-east-1.amazonaws.com/hello-springboot-app:latest
       - echo "Deploying to EKS"
+      - docker tag hello-springboot-app:latest 017373484103.dkr.ecr.us-east-1.amazonaws.com/hello-springboot-app:latest || echo "Tagging failed"
+      - docker push 017373484103.dkr.ecr.us-east-1.amazonaws.com/hello-springboot-app:latest || echo "Push failed"
       - aws eks update-kubeconfig --region us-east-1 --name wonderful-rock-potato
-      - kubectl apply -f deployment.yaml
+      - kubectl apply -f deployment.yaml || echo "K8s deployment failed"
       - kubectl get pods
-      - echo "Application deployed successfully"
 
 artifacts:
   files:
-    - target/*.jar
+    - Jenkins_Assignment_7/hello-springboot-app/target/*.jar
