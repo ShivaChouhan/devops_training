@@ -2,20 +2,20 @@ version: 0.2
 
 env:
   variables:
-    AWS_ACCOUNT_ID: "017373484103"
-    AWS_REGION: "us-east-1"
+    AWS_ACCOUNT_ID: "017373484103"  # Replace with your AWS account ID
+    AWS_REGION: "us-east-1"         # Replace with your region
     ECR_REPOSITORY: "hello-springboot-app"
-    EKS_CLUSTER_NAME: "wonderful-rock-potato"
+    EKS_CLUSTER_NAME: "your-eks-cluster"  # Replace with your EKS cluster name
+    MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
 
 phases:
   install:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Installing required packages..."
+      - echo "Installing required tools..."
       - apt-get update -y
       - apt-get install -y maven
-      - echo "Installing kubectl..."
       - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
@@ -29,25 +29,26 @@ phases:
 
   build:
     commands:
-      - echo "Building application..."
+      - echo "Building Java application..."
       - cd Jenkins_Assignment_7/hello-springboot-app
-      - mvn clean package -DskipTests
+      - mvn clean package
       - echo "Building Docker image..."
-      - docker build -t $ECR_REPOSITORY .
+      - docker build -t $ECR_REPOSITORY:latest .
+      - docker tag $ECR_REPOSITORY:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
 
   post_build:
     commands:
-      - echo "Tagging and pushing Docker image..."
-      - docker tag $ECR_REPOSITORY:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
+      - echo "Pushing Docker image to ECR..."
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
-      - echo "Configuring kubectl..."
-      - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+      - echo "Configuring kubectl for EKS..."
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
       - echo "Deploying to EKS..."
       - kubectl apply -f deployment.yaml
-      - echo "Verifying deployment..."
-      - kubectl get pods -w --timeout=120s
       - echo "Getting service URL..."
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+      - echo "Verifying deployment..."
+      - kubectl rollout status deployment/hello-springboot-app --timeout=300s
+      - kubectl get pods
 
 artifacts:
   files:
@@ -57,4 +58,3 @@ artifacts:
 cache:
   paths:
     - '/root/.m2/**/*'
-    - '/var/cache/apt/**/*'
