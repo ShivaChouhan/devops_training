@@ -5,15 +5,13 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Updating APT and installing Maven & Docker"
-      - apt-get update
-      - apt-get install -y maven docker.io
-      - service docker start
-      - echo "Installing kubectl & configuring EKS cluster"
+      - echo "Installing required packages"
+      - apt-get update -y
+      - apt-get install -y maven
+      - echo "Installing kubectl"
       - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
-      - aws eks update-kubeconfig --region us-east-1 --name wonderful-rock-potato
 
   pre_build:
     commands:
@@ -29,7 +27,11 @@ phases:
 
   post_build:
     commands:
+      - echo "Tagging and pushing Docker image"
+      - docker tag hello-springboot-app:latest 017373484103.dkr.ecr.us-east-1.amazonaws.com/hello-springboot-app:latest
+      - docker push 017373484103.dkr.ecr.us-east-1.amazonaws.com/hello-springboot-app:latest
       - echo "Deploying to EKS"
+      - aws eks update-kubeconfig --region us-east-1 --name wonderful-rock-potato
       - kubectl apply -f deployment.yaml
       - kubectl get pods
       - echo "Application deployed successfully"
