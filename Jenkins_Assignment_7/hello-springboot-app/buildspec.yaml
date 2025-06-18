@@ -18,27 +18,15 @@ phases:
       - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
-      - echo "Verifying AWS permissions..."
-      - aws sts get-caller-identity
 
   pre_build:
     commands:
       - echo "Setting up AWS credentials..."
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - echo "Account ID: $AWS_ACCOUNT_ID"
       - echo "Logging in to Amazon ECR..."
-      - if ! aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com; then
-          echo "Failed to login to ECR. Checking permissions...";
-          aws iam get-user || aws iam get-role --role-name $CODEBUILD_SERVICE_ROLE;
-          exit 1;
-        fi
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - echo "Checking for ECR repository..."
-      - if ! aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION; then
-          echo "Creating ECR repository...";
-          aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION \
-            --image-scanning-configuration scanOnPush=true \
-            --image-tag-mutability MUTABLE;
-        fi
+      - aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION || aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION
 
   build:
     commands:
@@ -58,8 +46,9 @@ phases:
       - kubectl apply -f deployment.yaml
       - echo "Verifying deployment..."
       - kubectl rollout status deployment/hello-springboot-app --timeout=300s
-      - echo "Service URL:"
+      - echo "Getting service URL..."
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+      - kubectl get pods
 
 cache:
   paths:
