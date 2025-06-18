@@ -2,10 +2,9 @@ version: 0.2
 
 env:
   variables:
-    AWS_ACCOUNT_ID: "017373484103"  # Replace with your AWS account ID
-    AWS_REGION: "us-east-1"         # Replace with your region
-    ECR_REPOSITORY: "hello-springboot-app"
-    EKS_CLUSTER_NAME: "your-eks-cluster"  # Replace with your EKS cluster name
+    REPOSITORY_NAME: "hello-springboot-app"
+    AWS_REGION: "us-east-1"
+    EKS_CLUSTER_NAME: "wonderful-rock-potato"
     MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
 
 phases:
@@ -22,10 +21,16 @@ phases:
 
   pre_build:
     commands:
+      - echo "Setting up AWS credentials..."
+      - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - echo "AWS Account ID: $AWS_ACCOUNT_ID"
       - echo "Logging in to Amazon ECR..."
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-      - echo "Creating ECR repository if not exists..."
-      - aws ecr describe-repositories --repository-names $ECR_REPOSITORY || aws ecr create-repository --repository-name $ECR_REPOSITORY
+      - echo "Checking for ECR repository..."
+      - if ! aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION >/dev/null 2>&1; then
+          echo "Creating ECR repository..."
+          aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION;
+        fi
 
   build:
     commands:
@@ -33,21 +38,21 @@ phases:
       - cd Jenkins_Assignment_7/hello-springboot-app
       - mvn clean package
       - echo "Building Docker image..."
-      - docker build -t $ECR_REPOSITORY:latest .
-      - docker tag $ECR_REPOSITORY:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
+      - docker build -t $REPOSITORY_NAME:latest .
+      - docker tag $REPOSITORY_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:latest
 
   post_build:
     commands:
       - echo "Pushing Docker image to ECR..."
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
-      - echo "Configuring kubectl for EKS..."
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:latest
+      - echo "Configuring kubectl..."
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
       - echo "Deploying to EKS..."
       - kubectl apply -f deployment.yaml
-      - echo "Getting service URL..."
-      - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
       - echo "Verifying deployment..."
       - kubectl rollout status deployment/hello-springboot-app --timeout=300s
+      - echo "Getting service URL..."
+      - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
       - kubectl get pods
 
 artifacts:
@@ -58,3 +63,4 @@ artifacts:
 cache:
   paths:
     - '/root/.m2/**/*'
+    - '/var/cache/apt/**/*'
