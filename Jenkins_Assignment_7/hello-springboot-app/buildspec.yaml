@@ -1,28 +1,22 @@
-version: 0.2
-
 phases:
   install:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Updating APT and installing Maven & Docker"
+      - echo "Updating packages and installing Docker & Maven"
       - apt-get update
       - apt-get install -y maven docker.io
-      - service docker start
-      - echo "Installing kubectl & configuring EKS cluster"
-      - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - chmod +x kubectl
-      - mv kubectl /usr/local/bin/
-      - aws eks update-kubeconfig --region us-east-1 --name wonderful-rock-potato
 
   pre_build:
     commands:
-      - echo "Logging in to Amazon ECR"
+      - echo "Verifying Docker is working"
+      - docker --version
+      - echo "Logging into ECR"
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 017373484103.dkr.ecr.us-east-1.amazonaws.com
 
   build:
     commands:
-      - echo "Building JAR using Maven"
+      - echo "Building Maven project"
       - mvn clean package
       - echo "Building Docker image"
       - docker build -t hello-springboot-app .
@@ -30,10 +24,7 @@ phases:
   post_build:
     commands:
       - echo "Deploying to EKS"
+      - curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - chmod +x kubectl && mv kubectl /usr/local/bin/
+      - aws eks update-kubeconfig --region us-east-1 --name wonderful-rock-potato
       - kubectl apply -f deployment.yaml
-      - kubectl get pods
-      - echo "Application deployed successfully"
-
-artifacts:
-  files:
-    - target/*.jar
