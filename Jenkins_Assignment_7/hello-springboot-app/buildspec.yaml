@@ -5,7 +5,7 @@ env:
     REPOSITORY_NAME: "hello-springboot-app"
     AWS_REGION: "us-east-1"
     EKS_CLUSTER_NAME: "wonderful-rock-potato"
-    MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
+    MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 phases:
   install:
@@ -23,19 +23,14 @@ phases:
     commands:
       - echo "Setting up AWS credentials..."
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - echo "AWS Account ID: $AWS_ACCOUNT_ID"
       - echo "Logging in to Amazon ECR..."
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - echo "Checking for ECR repository..."
-      - if ! aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION >/dev/null 2>&1; then
-          echo "Creating ECR repository..."
-          aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION;
-        fi
+      - aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION || aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION
 
   build:
     commands:
       - echo "Building Java application..."
-      - cd Jenkins_Assignment_7/hello-springboot-app
       - mvn clean package
       - echo "Building Docker image..."
       - docker build -t $REPOSITORY_NAME:latest .
@@ -55,12 +50,7 @@ phases:
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
       - kubectl get pods
 
-artifacts:
-  files:
-    - Jenkins_Assignment_7/hello-springboot-app/target/*.jar
-  discard-paths: yes
-
 cache:
   paths:
-    - '/root/.m2/**/*'
-    - '/var/cache/apt/**/*'
+    - '.m2/**/*'
+    - 'target/**/*'
