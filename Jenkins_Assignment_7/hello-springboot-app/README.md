@@ -62,7 +62,7 @@ To enable Jenkins to push Docker images to DockerHub, set up Docker credentials:
 3. ➕ Click **Add Credentials**.
 4. 👤 Choose **Username with password** as the kind.
 5. 📝 Enter your DockerHub username and use a **Docker Hub access token** (not your password) for enhanced security.
-6. 🏷️ Set the ID to `rajkashyap12` (or the ID referenced in your Jenkinsfile).
+6. 🏷️ Set the ID to `shivachouhan` (or the ID referenced in your Jenkinsfile).
 7. 💾 Save the credentials.
 
 Jenkins pipelines can now use these credentials to authenticate with DockerHub securely.
@@ -145,7 +145,3 @@ kubectl apply -f deployment.yaml
 - 📥 When adding a new slave node (agent) in Jenkins using the "Launch agent by connecting it to the controller" method, Jenkins provides a command to run on the slave VM. This command downloads the `agent.jar` file from the Jenkins master (controller) to the slave VM, or you can transfer it using `scp` if needed.
 - 🔗 The `agent.jar` file is responsible for establishing a connection between the slave node and the Jenkins master, allowing the agent to receive and execute jobs.
 
-
-
----
-This project is for educational purposes as part of DevOps Journey 2k25 assignments.
