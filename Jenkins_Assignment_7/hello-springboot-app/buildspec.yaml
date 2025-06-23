@@ -42,15 +42,16 @@ phases:
       - echo "Pushing Docker image to ECR..."
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:latest
       - echo "Configuring kubectl..."
-      - aws eks update-kubeconfig --name wonderful-rock-potato --region us-east-1
+      # - aws eks update-kubeconfig --name wonderful-rock-potato --region us-east-1
       - echo "Checking deployment.yaml contents..."
       - cat deployment.yaml
       - echo "Who am I?"
+      - echo "Configuring AWS credentials for EKS..."
       - aws sts get-caller-identity
-      - echo "Kubeconfig context:"
-      - kubectl config current-context
-      - echo "Nodes:"
-      - kubectl get nodes
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+      - kubectl config view --minify
+      - echo "Testing cluster access..."
+      - kubectl get nodes      
       - echo "Deploying to EKS..."
       - kubectl apply -f deployment.yaml
       - echo "Verifying deployment..."
