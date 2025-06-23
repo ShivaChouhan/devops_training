@@ -50,6 +50,7 @@ phases:
       - echo "Kubeconfig context:"
       - kubectl config current-context
       - echo "Nodes:"
+      - aws eks update-kubeconfig --name wonderful-rock-potato --region us-east-1
       - kubectl get nodes
       - echo "Deploying to EKS..."
       - kubectl apply -f deployment.yaml
