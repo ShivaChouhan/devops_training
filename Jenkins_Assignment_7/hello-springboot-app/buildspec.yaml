@@ -45,6 +45,12 @@ phases:
       - aws eks update-kubeconfig --name wonderful-rock-potato --region us-east-1
       - echo "Checking deployment.yaml contents..."
       - cat deployment.yaml
+      - echo "Who am I?"
+      - aws sts get-caller-identity
+      - echo "Kubeconfig context:"
+      - kubectl config current-context
+      - echo "Nodes:"
+      - kubectl get nodes
       - echo "Deploying to EKS..."
       - kubectl apply -f deployment.yaml
       - echo "Verifying deployment..."
