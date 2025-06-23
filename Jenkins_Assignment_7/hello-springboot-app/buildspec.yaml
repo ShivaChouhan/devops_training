@@ -44,9 +44,9 @@ phases:
       - echo "Configuring kubectl..."
       # - aws eks update-kubeconfig --name wonderful-rock-potato --region us-east-1
       
-      - echo "Testing DNS resolution..."
-      - nslookup CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
-      - ping -c 4 CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
+      # - echo "Testing DNS resolution..."
+      # - nslookup CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
+      # - ping -c 4 CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
       
       - echo "Checking deployment.yaml contents..."
       - cat deployment.yaml
