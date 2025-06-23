@@ -1,57 +1,151 @@
-# Hello World Spring Boot Web Application
+# 🚀 Hello Spring Boot App - Jenkins Assignment 7
 
-## Overview
-This is a simple Spring Boot web application that displays `"Hello! That's my Java application."` on a web page. It demonstrates the basics of setting up a Spring Boot application with a REST endpoint.
+This project demonstrates a simple Java Spring Boot web application, containerized with Docker, and automated using Jenkins pipelines for CI/CD. The application is deployed to a Kubernetes cluster (Minikube) as part of the workflow.
 
-## Features
-- Single endpoint (`/hello`) that returns a greeting message.
-- Built with Spring Boot 3.x (or 2.x).
-- Uses embedded Tomcat server (default).
-- Lightweight and easy to deploy.
+## 🖥️ Virtual Machine Setup
+Before starting the project, two VMs were set up using Oracle VirtualBox:
+- 🖥️ **Master VM**: Acts as the Jenkins master node. Jenkins was installed and accessed via a web browser on this VM.
+- 🖥️ **Slave VM**: Acts as the Jenkins agent (slave node) for running build and deployment jobs.
 
-## Tech Stack
-- **Backend**: Spring Boot (Java)
-- **Build Tool**: Maven
-- **Packaging**: JAR (executable)
+This master-slave setup allows distributed builds and better resource management for CI/CD pipelines.
 
-## How It Works
-1. When you run the application, it starts a web server (default port: `8080`).
-2. Accessing `http://localhost:8080/hello` returns:
-   ```
-   Hello! That's my Java application.
-   ```
+## ⚙️ Jenkins Setup
+After installing Jenkins on the master VM:
+1. 🌐 Open Jenkins in your web browser (usually at `http://<master-vm-ip>:8080`).
+2. 🔑 Complete the initial setup wizard:
+   - Unlock Jenkins using the administrator password from `/var/lib/jenkins/secrets/initialAdminPassword`.
+   - Install suggested plugins.
+   - Create your first admin user.
+3. 🛠️ Configure system settings as needed (e.g., tools, global credentials).
+4. ➕ Add the slave VM as a Jenkins agent for distributed builds.
 
-## Setup Instructions
-1. **Requirements**:
-   - Java 17+
-   - Maven
+## 🤖 Step-by-Step: Adding and Connecting a Jenkins Slave Node (Agent)
 
-2. **Run the app**:
-   ```bash
-   mvn spring-boot:run
-   # Or
-   java -jar target/hello-springboot-app.jar
-   ```
+1. **Create the Agent Node in Jenkins (Master VM):**
+   - ➕ Go to **Manage Jenkins** > **Manage Nodes and Clouds**.
+   - ➕ Click **New Node**.
+   - 📝 Enter a name (e.g., `Slave_node`), select **Permanent Agent**, and click OK.
+   - 🔢 Set the number of executors to **2**.
+   - 🗂️ Enter the remote root directory as **/opt/build**.
+   - 🏷️ Set the labels (e.g., `Slave_node`) to match your pipeline configuration.
+   - ⚡ Choose the launch method: **Launch agent by connecting it to the controller** (JNLP/agent.jar method).
+   - 💾 Save the node configuration.
 
-3. **Test**:
-   Open a browser or use `curl`:
-   ```bash
-   curl http://localhost:8080/hello
-   ```
+2. **Prepare the Slave VM:**
+   - 🗂️ Manually create the `/opt/build` directory on the slave VM:
+     ```sh
+     sudo mkdir -p /opt/build
+     sudo chown jenkins:jenkins /opt/build
+     ```
+   - 📁 This directory is created at the root (`/`) of the filesystem and will be used by Jenkins for job workspaces and files.
 
-## Project Structure
+3. **Transfer agent.jar to the Slave VM:**
+   - 📥 Download `agent.jar` from the Jenkins master (controller). If the slave VM cannot download it directly, use `scp` to transfer it:
+     ```sh
+     # Run this command on your local machine or the master VM
+     scp jenkins@<master-vm-ip>:/path/to/agent.jar jenkins@<slave-vm-ip>:/home/jenkins/agent.jar
+     ```
+
+4. **Connect the Slave Node to Jenkins:**
+   - 🔗 In the Jenkins UI on the master VM, open the configuration page for your `Slave_node`.
+   - 📋 Copy the Java command provided (it includes the JNLP URL and secret).
+   - 💻 Paste and run this command on the slave VM to connect the agent to the Jenkins master:
+     ```sh
+     java -jar /home/jenkins/agent.jar -jnlpUrl http://<master-vm-ip>:8080/computer/Slave_node/jenkins-agent.jnlp -secret <secret-key> -workDir "/opt/build"
+     ```
+   - ✅ Once executed, the slave node will appear as "connected" in the Jenkins UI and will be ready to run jobs.
+
+## 🐳 Docker Credentials Setup in Jenkins
+To enable Jenkins to push Docker images to DockerHub, set up Docker credentials:
+1. 🔐 In Jenkins, go to **Manage Jenkins** > **Manage Credentials**.
+2. 🌍 Select the appropriate domain (or use "(global)")).
+3. ➕ Click **Add Credentials**.
+4. 👤 Choose **Username with password** as the kind.
+5. 📝 Enter your DockerHub username and use a **Docker Hub access token** (not your password) for enhanced security.
+6. 🏷️ Set the ID to `rajkashyap12` (or the ID referenced in your Jenkinsfile).
+7. 💾 Save the credentials.
+
+Jenkins pipelines can now use these credentials to authenticate with DockerHub securely.
+
+## 📦 Project Structure
+- `HelloApplication.java`: Main Spring Boot application entry point.
+- `HelloController.java`: REST controller exposing `/hello` endpoint.
+- `pom.xml`: Maven build configuration.
+- `Dockerfile`: Containerizes the Spring Boot app.
+- `deployment.yaml`: Kubernetes manifest for deployment and service.
+- `Jenkinsfile`: Jenkins pipeline for Docker build and push to DockerHub.
+- `JenkinsFile_K8s`: Jenkins pipeline for building, Dockerizing, and deploying to Minikube.
+
+## 📁 Project Folder Structure
+
 ```
-src/
-├── main/
-│   ├── java/
-│   │   └── com/example/helloapp/
-│   │       ├── HelloApplication.java
-│   │       └── HelloController.java
-│   └── resources/
-│       └── application.properties
+hello-springboot-app/
+├── deployment.yaml
+├── Dockerfile
+├── Jenkinsfile
+├── JenkinsFile_K8s
+├── pom.xml
+├── README.md
+├── src/
+    └── main/
+        └── java/
+            └── com/
+                └── example/
+                    └── helloapp/
+                        ├── HelloApplication.java
+                        └── HelloController.java
 ```
 
-## Next Steps
-- Add Swagger for API docs.
-- Dockerize the app.
-- Extend with database connectivity.
+## ⚙️ How It Works
+1. 🌐 **Spring Boot App**: Exposes a `/hello` endpoint returning a greeting message.
+2. 🏗️ **Build & Package**: Uses Maven to build a JAR file.
+3. 🐳 **Dockerization**: Dockerfile packages the JAR into an image.
+4. 🤖 **Jenkins Pipelines**:
+   - `Jenkinsfile`: Builds, Dockerizes, and pushes the image to DockerHub.
+   - `JenkinsFile_K8s`: Builds, Dockerizes, and deploys the app to Minikube using Kubernetes manifests.
+5. ☸️ **Kubernetes Deployment**: Deploys the app and exposes it via a NodePort service.
+
+## 📝 Usage
+### 🔧 Prerequisites
+- ☕ Java 17
+- 🐘 Maven
+- 🐳 Docker
+- 🤖 Jenkins
+- ☸️ Minikube & kubectl
+
+### ▶️ Build & Run Locally
+```sh
+mvn clean package
+java -jar target/hello-springboot-app-1.0.0.jar
+```
+Visit: [http://localhost:8080/hello](http://localhost:8080/hello)
+
+### 🐳 Build Docker Image
+```sh
+docker build -t hello-springboot-app:latest .
+```
+
+### 🐳 Run with Docker
+```sh
+docker run -p 8080:8080 hello-springboot-app:latest
+```
+
+### ☸️ Deploy to Minikube
+```sh
+kubectl apply -f deployment.yaml
+```
+
+### 🤖 Jenkins Pipelines
+- Use `Jenkinsfile` for CI/CD with DockerHub.
+- Use `JenkinsFile_K8s` for CI/CD with Minikube.
+
+## 📚 Reference: Jenkins Agent Working Directory and agent.jar
+
+- 🗂️ The Jenkins agent (slave node) uses `/opt/build` as its remote root directory, created at the root (`/`) of the filesystem on the slave VM. All Jenkins job workspaces, build files, and temporary files for jobs running on the agent will be stored under this directory.
+- 📥 When adding a new slave node (agent) in Jenkins using the "Launch agent by connecting it to the controller" method, Jenkins provides a command to run on the slave VM. This command downloads the `agent.jar` file from the Jenkins master (controller) to the slave VM, or you can transfer it using `scp` if needed.
+- 🔗 The `agent.jar` file is responsible for establishing a connection between the slave node and the Jenkins master, allowing the agent to receive and execute jobs.
+
+
+
+---
+This project is for educational purposes as part of DevOps Journey 2k25 assignments.
