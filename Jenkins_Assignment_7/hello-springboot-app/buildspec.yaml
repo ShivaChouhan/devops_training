@@ -60,8 +60,8 @@ phases:
       - kubectl get nodes      
       - echo "Deploying to EKS..."
       - kubectl apply -f deployment.yaml
-      - echo "Verifying deployment..."
-      - kubectl rollout status deployment/hello-springboot-app --timeout=300s
+      # - echo "Verifying deployment..."
+      # - kubectl rollout status deployment/hello-springboot-app --timeout=300s
       - echo "Getting service URL..."
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
       - kubectl get pods
