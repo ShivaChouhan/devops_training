@@ -49,12 +49,12 @@ phases:
       # - ping -c 4 CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
       
       - echo "Checking deployment.yaml contents..."
-      - cat deployment.yaml
+      # - cat deployment.yaml
       - echo "Who am I?"
       - echo "Configuring AWS credentials for EKS..."
       - aws sts get-caller-identity
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
-      - kubectl config view --minify
+      # - kubectl config view --minify
       - echo "Testing cluster access..."
       - kubectl get nodes      
       - echo "Deploying to EKS..."
