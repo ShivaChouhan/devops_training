@@ -43,7 +43,7 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:latest
       - echo "Configuring kubectl..."
       # - aws eks update-kubeconfig --name wonderful-rock-potato --region us-east-1
-      
+      # new
       # - echo "Testing DNS resolution..."
       # - nslookup CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
       # - ping -c 4 CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
