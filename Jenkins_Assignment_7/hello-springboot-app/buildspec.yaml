@@ -59,7 +59,7 @@ phases:
       - echo "Testing cluster access..."
       - kubectl get nodes      
       - echo "Deploying to EKS..."
-      - kubectl apply -f deployment.yaml
+      - kubectl apply -f AWS_Deployment.yaml
       # - echo "Verifying deployment..."
       # - kubectl rollout status deployment/hello-springboot-app --timeout=300s
       - kubectl get pods
