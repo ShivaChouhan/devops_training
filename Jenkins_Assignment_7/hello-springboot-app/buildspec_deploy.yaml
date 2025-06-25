@@ -19,5 +19,7 @@ phases:
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
       - echo "Getting service URL..."
       - SERVICE_URL=$(kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-      - echo "Application URL: http://$SERVICE_URL"
-      - echo "## Application is available at: http://$SERVICE_URL ##"
+      - echo "Application URL:" 
+      - echo "http://$SERVICE_URL"
+      - echo "## Application is available at:" 
+      - echo " http://$SERVICE_URL ##"
