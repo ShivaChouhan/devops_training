@@ -21,5 +21,4 @@ phases:
       - SERVICE_URL=$(kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
       - echo "Application URL:" 
       - echo "http://$SERVICE_URL"
-      - echo "## Application is available at:" 
-      - echo " http://$SERVICE_URL ##"
+      
