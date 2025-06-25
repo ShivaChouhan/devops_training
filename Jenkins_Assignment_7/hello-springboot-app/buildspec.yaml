@@ -51,7 +51,9 @@ phases:
       # - ping -c 4 CD377CCA0852CABB63753FE999358E01.gr7.us-east-1.eks.amazonaws.com
       
       - echo "Checking deployment.yaml contents..."
+      
       # - cat deployment.yaml
+      
       - echo "Who am I?"
       - echo "Configuring AWS credentials for EKS..."
       - aws sts get-caller-identity
