@@ -74,7 +74,7 @@ phases:
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
 
       - SERVICE_URL=$(kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-      - echo "Service URL: $SERVICE_URL"
+      - echo " $SERVICE_URL"
       - echo "SERVICE_URL=$SERVICE_URL" >> buildenv.txt
       - cat buildenv.txt
 
