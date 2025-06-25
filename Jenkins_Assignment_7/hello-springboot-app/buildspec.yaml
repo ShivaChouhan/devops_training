@@ -43,6 +43,7 @@ phases:
       - echo "Pushing Docker image to ECR..."
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:latest
       - echo "Configuring kubectl..."
+      
       # - aws eks update-kubeconfig --name wonderful-rock-potato --region us-east-1
       # new
       # - echo "Testing DNS resolution..."
@@ -55,13 +56,17 @@ phases:
       - echo "Configuring AWS credentials for EKS..."
       - aws sts get-caller-identity
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+      
       # - kubectl config view --minify
+
       - echo "Testing cluster access..."
       - kubectl get nodes      
       - echo "Deploying to EKS..."
       - kubectl apply -f AWS_Deployment.yaml
+      
       # - echo "Verifying deployment..."
       # - kubectl rollout status deployment/hello-springboot-app --timeout=300s
+      
       - kubectl get pods
       - echo "Getting service URL..."
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
