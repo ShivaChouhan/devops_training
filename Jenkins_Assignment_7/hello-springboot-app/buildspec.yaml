@@ -72,10 +72,9 @@ phases:
       - kubectl get pods
       - echo "Getting service URL..."
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-
-
+      
       - echo "Service URL: $(kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
-      - echo "## Exporting Service URL ##"
+      # - echo "## Exporting Service URL ##"
       - echo "SERVICE_URL=$(kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $CODEBUILD_VAR_FILE
 
 artifacts:
