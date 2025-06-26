@@ -366,3 +366,104 @@ Below is a summary of the IAM roles visible in your AWS account and how they are
 **Summary:**  
 IAM roles are the backbone of secure, permissioned automation in AWS.  
 Each service (EKS, EC2 nodes, CodeBuild, CodePipeline) needs its own role, and you must map the right roles in your EKS cluster for everything to work together securely and seamlessly.
+
+
+# AWS CodePipeline Manual Setup Guide
+
+
+## Create a Custom Pipeline via AWS Console
+
+### Step 1: Initialize Pipeline Creation
+1. Navigate to **AWS CodePipeline** service
+2. Click **"Create pipeline"** button
+3. Select **"Build custom pipeline"** option
+
+### Step 2: Configure Pipeline Properties
+- **Edition**: `new_pipeline` (as shown in reference image)
+- **Pipeline type**: Select `V1`
+- **Execution mode**: Choose `QRLKID` (or your preferred mode)
+  
+![Pipeline Properties](image.png)
+
+### Step 3: Set Up Source Stage
+1. Click **"Edit: Source"** section
+2. Configure source provider (GitHub, CodeCommit, etc.)
+3. Set up Git triggers:
+   - **Filter type**: Push events
+   - **Branch specification**: Include `main` branch
+4. Enable **Automated stage configuration**
+   - Check "Enable automatic entry on stage failure"
+   - Set **Entry code**: `Entry failed stage`
+
+---
+
+## 🟢 Step 4: Configure Build Stage
+
+1. Navigate to **"Edit: Build"** section
+2. Select a build provider (e.g., **CodeBuild**, **Jenkins**, etc.)
+3. Set stage conditions:
+   - **Entry**: Not configured (or define your conditions)
+   - **Success/Failure**: Configure actions as needed
+4. Enable **Administered stage configuration**:
+   - ✅ Check **"Enable automatic entry on stage failure"**
+   - 🧾 Set **Entry code**: `Entry failed stage`
+
+---
+
+## 🟢 Step 5: Set Up Display Stage (Optional)
+
+1. Go to **"Edit: Display"** section
+2. Click **"Add usage"** to configure display options
+3. Set conditions:
+   - Define actions for `entry`, `success`, and `failure` as needed
+
+---
+
+## 🟢 Step 6: Review Pipeline Structure
+
+Your pipeline should now include these components:
+
+- ✅ **Source** (e.g., `CodeCommit`, `GitHub`)
+- ✅ **Build** (e.g., `CodeBuild`, `Jenkins`, `AirtBrain`)
+- 🟡 **Display** (Optional: `CodeDisplay`)
+- 🏗 **Pipeline** (Managed by `CodePipeline`)
+
+---
+
+## 🟢 Step 7: Final Configuration
+
+1. Navigate to **Pipeline Settings**
+2. Configure **metrics** and **notifications**
+3. Set up **account-level metrics** if required
+4. Review all stages under **"Action details"**
+5. ✅ Click **"Create pipeline"** to deploy
+
+---
+
+**Pipeline Example:**  
+![Pipeline](Images_and_Videos/Pipeline.png)
+
+## 🚀 Post-Creation Actions
+
+- Monitor pipeline execution in the **History** tab
+- View real-time stats in **Pipeline Metrics**
+- Adjust triggers and settings under **Account metrics**
+
+---
+
+## ⚠️ Troubleshooting Tips
+
+If the pipeline fails:
+
+- 🔎 Check **"Entry failed stage"** codes
+- 🔐 Verify **IAM permissions** for each pipeline stage
+- 🔗 Confirm access to the **source repository**
+- 📦 Validate your **buildspec.yml** and artifacts path
+
+---
+
+## 🎬 Video Walkthrough
+
+You can also watch the full process in this video:  
+[▶️ Custom CodePipeline Demo (custom_code_pipeline.mp4)](Images_and_Videos/custom_code_pipeline.mp4)
+
