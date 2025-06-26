@@ -306,3 +306,62 @@ Add or remove roles as needed under `mapRoles:`.
 **Summary:**  
 This `aws-auth` ConfigMap ensures both your EKS nodes and your CodeBuild CI/CD jobs have the necessary permissions to operate and deploy workloads in your cluster.
 
+---
+
+## Understanding IAM Roles in Your EKS & CI/CD Setup
+
+![IAM Roles Example](Images_and_Videos/IAM_Roles.png)
+
+### What is an IAM Role?
+
+An **IAM Role** in AWS is an identity with specific permissions that can be assumed by AWS services or users.  
+Roles are used to grant access to AWS resources **without using long-term credentials** (like passwords or access keys).
+
+---
+
+### Why Are IAM Roles Important in EKS and CI/CD?
+
+- **EKS Cluster:** Needs a role to manage Kubernetes control plane resources.
+- **EKS Node Group:** Each worker node (EC2 instance) assumes a role to interact with the cluster and AWS services.
+- **CodeBuild:** The build environment assumes a role to pull/push images, deploy to EKS, and access other AWS resources.
+- **CodePipeline:** If used, it also needs a role to orchestrate the pipeline.
+
+---
+
+### Roles in Your AWS Account and Their Usage
+
+Below is a summary of the IAM roles visible in your AWS account and how they are used in your EKS and CI/CD setup:
+
+| Role Name                                         | Used By         | Purpose                                                                                  |
+|---------------------------------------------------|-----------------|------------------------------------------------------------------------------------------|
+| **AmazonEKSClusterRole**                          | EKS Cluster     | Allows EKS control plane to manage AWS resources (e.g., networking, load balancers).     |
+| **node_group1**                                   | EKS Node Group  | Allows EC2 worker nodes to join the cluster and interact with AWS services.              |
+| **codebuild-demo-app-spring-service-role**         | CodeBuild       | Used by CodeBuild to build, push Docker images, and deploy to EKS (CI/CD pipeline).      |
+| **codebuild-spring-demo-app-deploy-service-role**  | CodeBuild       | Used by another CodeBuild project for deployment to EKS (CI/CD pipeline).                |
+| **AWSServiceRoleForAmazonEKSNodegroup**           | EKS Node Group  | Service-linked role for managed node groups (created automatically by AWS).              |
+| **AWSServiceRoleForAmazonEKS**                    | EKS Cluster     | Service-linked role for EKS cluster management (created automatically by AWS).           |
+| **AWSCodePipelineServiceRole-...**                | CodePipeline    | Used by CodePipeline to orchestrate build and deploy stages (if you use CodePipeline).   |
+
+---
+
+### How They Work Together
+
+- **EKS Cluster** uses `AmazonEKSClusterRole` and `AWSServiceRoleForAmazonEKS` to manage the cluster.
+- **EKS Node Group** uses `node_group1` and `AWSServiceRoleForAmazonEKSNodegroup` so worker nodes can join and function.
+- **CodeBuild** uses `codebuild-demo-app-spring-service-role` and `codebuild-spring-demo-app-deploy-service-role` to:
+  - Pull code from your repo
+  - Build and push Docker images to ECR
+  - Deploy to EKS using `kubectl`
+- **CodePipeline** (if used) uses its own service role to trigger CodeBuild and manage the pipeline.
+
+---
+
+### Why Mapping Roles in `aws-auth` is Critical
+
+- **Node group roles** must be mapped so nodes can join the cluster.
+- **CodeBuild roles** must be mapped (with `system:masters` group) so your CI/CD jobs can run `kubectl` commands and deploy to EKS.
+
+---
+
+**Summary:**  
+IAM roles are
