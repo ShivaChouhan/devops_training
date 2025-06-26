@@ -74,7 +74,7 @@ sudo ./svc.sh start
 - You should see your Ubuntu runner listed as **online**.
 
 **Example:**  
-![GitHub Runner Active](Jenkins_Assignment_7/hello-springboot-app/Images_and_Videos/Github_runner_active.png)
+![GitHub Runner Active](Github_runner_active.png)
 
 ---
 
@@ -160,7 +160,7 @@ Whenever you push changes to the `main` branch (specifically to files under `Jen
 ---
 
 **Example of a Successful GitHub Actions Run:**  
-![Build Success GitHub Action](Jenkins_Assignment_7/hello-springboot-app/Images_and_Videos/build_success_gitAction.png)
+![Build Success GitHub Action](build_success_gitAction.png)
 
 ---
 
