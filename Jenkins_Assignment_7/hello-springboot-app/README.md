@@ -2,6 +2,8 @@
 
 This project demonstrates a simple Java Spring Boot web application, containerized with Docker, and automated using Jenkins pipelines for CI/CD. The application is deployed to a Kubernetes cluster (Minikube) as part of the workflow.
 
+
+
 ## 🖥️ Virtual Machine Setup
 Before starting the project, two VMs were set up using Oracle VirtualBox:
 - 🖥️ **Master VM**: Acts as the Jenkins master node. Jenkins was installed and accessed via a web browser on this VM.
