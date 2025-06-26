@@ -2,8 +2,6 @@
 
 This guide walks you through creating an Amazon EKS cluster without EKS Auto Mode and manually adding worker nodes using the AWS Console.
 
-![Configuration Options](image.png)
-
 ## Prerequisites
 - AWS account with IAM permissions for EKS
 - AWS CLI configured with proper credentials
@@ -81,4 +79,189 @@ kubectl get nodes --watch
    ```bash
    kubectl get nodes
    ```
+
+# How to Create an AWS CodeBuild Project (Console) to Build and Deploy to EKS Using `buildspec.yaml`
+
+This guide explains how to set up an AWS CodeBuild project using the AWS Console to build your Spring Boot application, push the Docker image to ECR, and deploy to EKS using your provided `buildspec.yaml`.
+
+---
+
+## Prerequisites
+
+- An EKS cluster with worker nodes and `kubectl` access
+- Your application Docker image repository created in ECR (the buildspec will create it if missing)
+- `AWS_Deployment.yaml` and `buildspec.yaml` files are present in your repository
+- The CodeBuild IAM role is mapped in your EKS cluster's `aws-auth` ConfigMap with `system:masters` group
+- The CodeBuild IAM role has permissions for EKS, ECR, S3, and CloudWatch Logs
+
+---
+
+## Step 1: Prepare Your Source Repository
+
+- Ensure your repository (GitHub, CodeCommit, etc.) contains:
+  - `AWS_Deployment.yaml`
+  - `buildspec.yaml` (see below)
+  - Your application source code and Dockerfile
+
+---
+
+## Step 2: Create a CodeBuild Project
+
+1. **Go to the [AWS CodeBuild Console](https://console.aws.amazon.com/codebuild/home).**
+2. Click **Create build project**.
+
+### Project Configuration
+
+- **Project name:**  
+  Enter a name (e.g., `demo-app-spring`).
+
+- **Description:**  
+  (Optional) Describe your project.
+
+### Source
+
+- **Source provider:**  
+  Select your source (e.g., GitHub, CodeCommit).
+- **Repository:**  
+  Choose the repository containing your code and `buildspec.yaml`.
+
+### Environment
+
+- **Environment image:**  
+  - Choose "Managed image"
+  - Operating system: Ubuntu or Amazon Linux 2
+  - Runtime: Standard
+  - Image: Choose the latest available (e.g., `aws/codebuild/standard:7.0`)
+- **Service role:**  
+  - Select an existing role or create a new one.
+  - Ensure this role has permissions for EKS, ECR, S3, and is mapped in your EKS `aws-auth` ConfigMap.
+
+### Buildspec
+
+- **Buildspec name:**  
+  - Use the default `buildspec.yaml` or specify a custom name if needed.
+
+### Artifacts
+
+- **Type:**  
+  - No artifacts (unless you want to store build outputs).
+
+### Logs
+
+- Enable CloudWatch logs for troubleshooting.
+
+---
+
+## Step 3: Configure Environment Variables (Optional)
+
+If your `buildspec.yaml` uses variables, add them under **Additional configuration > Environment variables** (e.g., `EKS_CLUSTER_NAME`, `AWS_REGION`).  
+In your case, these are already set in the `env:` section of your `buildspec.yaml`.
+
+---
+
+## Step 4: Review and Create
+
+- Review all settings.
+- Click **Create build project**.
+
+---
+
+## Step 5: Run the Build
+
+1. On the project page, click **Start build**.
+2. Monitor the build logs for progress.
+3. If successful, CodeBuild will:
+   - Build your Java application with Maven
+   - Build and push the Docker image to ECR
+   - Deploy to EKS using `kubectl apply -f AWS_Deployment.yaml`
+   - Print the service URL if available
+
+---
+
+## Example `buildspec.yaml` (Used in This Project)
+
+```yaml
+version: 0.2
+
+env:
+  variables:
+    REPOSITORY_NAME: "hello-springboot-app"
+    AWS_REGION: "us-east-1"
+    EKS_CLUSTER_NAME: "wonderful-rock-potato"
+    MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+    commands:
+      - echo "Installing required tools..."
+      - apt-get update -y
+      - apt-get install -y maven docker.io
+      - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - chmod +x kubectl
+      - mv kubectl /usr/local/bin/
+
+  pre_build:
+    commands:
+      - echo "Setting up AWS credentials..."
+      - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - echo "Checking for ECR repository..."
+      - aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION || aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION
+
+  build:
+    commands:
+      - echo "Building Java application..."
+      - cd Jenkins_Assignment_7/hello-springboot-app
+      - mvn clean package
+      - echo "Building Docker image..."
+      - docker build -t $REPOSITORY_NAME:latest .
+      - docker tag $REPOSITORY_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:latest
+
+  post_build:
+    commands:
+      - echo "Pushing Docker image to ECR..."
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:latest
+      - echo "Configuring kubectl..."
+      - echo "Checking deployment.yaml contents..."
+      - echo "Who am I?"
+      - echo "Configuring AWS credentials for EKS..."
+      - aws sts get-caller-identity
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+      - echo "Testing cluster access..."
+      - kubectl get nodes      
+      - echo "Deploying to EKS..."
+      - kubectl apply -f AWS_Deployment.yaml
+      - kubectl get pods
+      - echo "Getting service URL..."
+      - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+
+artifacts:
+  files:
+    - Jenkins_Assignment_7/hello-springboot-app/target/*.jar
+
+cache:
+  paths:
+    - '.m2/**/*'
+    - 'Jenkins_Assignment_7/hello-springboot-app/target/**/*'
+```
+
+---
+
+## Video Walkthrough
+
+You can also watch the full process in this video:  
+[▶️ CodeBuild EKS Deployment Demo (spring-demo-app-deploy_build.mp4)](Images_and_Videos/spring-demo-app-deploy_build.mp4)
+
+---
+
+## Troubleshooting
+
+- If `kubectl` commands fail with authentication errors, ensure your CodeBuild IAM role is mapped in the EKS `aws-auth` ConfigMap with `system:masters` group.
+- Check CloudWatch logs for detailed error messages.
+- Make sure your ECR repository and EKS cluster names match those in your `buildspec.yaml`.
+
+---
 
