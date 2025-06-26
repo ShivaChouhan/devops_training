@@ -364,4 +364,5 @@ Below is a summary of the IAM roles visible in your AWS account and how they are
 ---
 
 **Summary:**  
-IAM roles are
+IAM roles are the backbone of secure, permissioned automation in AWS.  
+Each service (EKS, EC2 nodes, CodeBuild, CodePipeline) needs its own role, and you must map the right roles in your EKS cluster for everything to work together securely and seamlessly.
