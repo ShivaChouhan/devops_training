@@ -189,7 +189,7 @@ You can also watch the full process in this video:
 
 ---
 
-## Troubleshooting
+## Troubleshooting 
 
 - If `kubectl` commands fail with authentication errors, ensure your CodeBuild IAM role is mapped in the EKS `aws-auth` ConfigMap with `system:masters` group.
 - Check CloudWatch logs for detailed error messages.
