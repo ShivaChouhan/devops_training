@@ -59,7 +59,7 @@ To start the runner in the foreground:
 ./run.sh
 ```
 
-To run the runner as a service (recommended for production):
+To run the runner as a service (recommended for production): 
 
 ```sh
 sudo ./svc.sh install
