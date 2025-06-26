@@ -265,3 +265,44 @@ You can also watch the full process in this video:
 
 ---
 
+## Understanding the `aws-auth` ConfigMap for EKS Access
+
+The `aws-auth` ConfigMap in your EKS cluster controls which IAM roles and users are allowed to access and manage the cluster using `kubectl`.  
+Below is a screenshot example of a well-configured `aws-auth` file, as seen in your CloudShell editor:
+
+**aws-auth ConfigMap Example:**  
+![Auth File](Images_and_Videos/Auth_File.png)
+
+### Explanation
+
+- **node_group1**:  
+  This is the IAM role used by your EKS worker nodes.  
+  It must always be present so nodes can join and operate in the cluster.
+
+- **CodeBuild roles**:  
+  Each `rolearn` entry for CodeBuild (such as `codebuild-demo-app-spring-service-role` and `codebuild-spring-demo-app-deploy-service-role`) allows your CodeBuild projects to access and manage the EKS cluster using `kubectl` commands.
+  - The `groups: [system:masters]` line gives these roles full admin access to the cluster (required for CI/CD deployments).
+
+- **Why multiple entries?**  
+  If you have several CodeBuild projects or roles, each must be listed here.  
+  Both `service-role/` and direct `role/` ARNs are included to cover all possible role naming conventions.
+
+### Best Practices
+
+- **Do not remove the node group role** or your nodes will not be able to join the cluster.
+- **Only grant `system:masters` to trusted automation roles** (like CodeBuild for CI/CD).
+- If you add new CodeBuild projects with different roles, add their ARNs here as well.
+
+### How to Edit
+
+To update this ConfigMap, run:
+```sh
+kubectl edit configmap aws-auth -n kube-system
+```
+Add or remove roles as needed under `mapRoles:`.
+
+---
+
+**Summary:**  
+This `aws-auth` ConfigMap ensures both your EKS nodes and your CodeBuild CI/CD jobs have the necessary permissions to operate and deploy workloads in your cluster.
+
