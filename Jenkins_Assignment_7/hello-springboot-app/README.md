@@ -43,7 +43,7 @@ After installing Jenkins on the master VM:
    - 📥 Download `agent.jar` from the Jenkins master (controller). If the slave VM cannot download it directly, use `scp` to transfer it:
      ```sh
      # Run this command on your local machine or the master VM
-     scp jenkins@<master-vm-ip>:/path/to/agent.jar jenkins@<slave-vm-ip>:/home/jenkins/agent.jar
+     scp jenkins@<master-vm-ip>:/path/to/agent.jar jenkins@<slave-vm-ip>:/home/Downloads/agent.jar
      ```
 
 4. **Connect the Slave Node to Jenkins:**
