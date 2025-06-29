@@ -16,7 +16,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('Jenkins_Assignment_7/hello-springboot-app') {
-                    sh 'eval $(minikube docker-env) && docker build -t hello-springboot-app:latest .'
+                    sh 'eval $(minikube docker-env) && docker build -t hello-springboot-app:$BUILD_NUMBER .'
                 }
             }
         }
@@ -24,12 +24,10 @@ pipeline {
             steps {
                 dir('Jenkins_Assignment_7/hello-springboot-app') {
                     echo 'Deploying to Minikube...'
-
-                    // Apply deployment and service to Minikube
-                    sh ''' 
+                    sh '''
                         eval $(minikube docker-env)
-                        kubectl delete deployment hello-springboot-app || true
-                        kubectl apply -f deployment.yaml 
+                        sed "s|hello-springboot-app:latest|hello-springboot-app:${BUILD_NUMBER}|g" deployment.yaml > deployment-temp.yaml
+                        kubectl apply -f deployment-temp.yaml
                     '''
                 }
             }
@@ -37,7 +35,6 @@ pipeline {
     }
     post {
         always {
-            // Optionally, show service URL
             sh ''' 
                 eval $(minikube docker-env)
                 echo "Service URL:"
