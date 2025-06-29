@@ -28,7 +28,7 @@ pipeline {
                     // Apply deployment and service to Minikube
                     sh ''' 
                         eval $(minikube docker-env)
-                        // kubectl delete deployment hello-springboot-app || true
+                        kubectl delete deployment hello-springboot-app || true
                         kubectl apply -f deployment.yaml 
                     '''
                 }
