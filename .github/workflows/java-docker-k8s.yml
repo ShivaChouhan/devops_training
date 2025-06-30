@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: [self-hosted, shivanad-chouhan-VirtualBox]  # Use a self-hosted runner with the specified label
+    runs-on: self-hosted  
 
     steps:
       - name: Checkout Code
