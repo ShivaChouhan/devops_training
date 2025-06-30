@@ -8,17 +8,17 @@ env:
     EKS_CLUSTER_NAME: "wonderful-rock-potato"
     MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
-phases:
-  install:
-    runtime-versions:
-      java: corretto17
-    commands:
-      - echo "Installing required tools..."
-      - apt-get update -y
-      - apt-get install -y maven docker.io gettext-base
-      - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - chmod +x kubectl
-      - mv kubectl /usr/local/bin/
+# phases:
+#   install:
+#     runtime-versions:
+#       java: corretto17
+#     commands:
+#       - echo "Installing required tools..."
+#       - apt-get update -y
+#       - apt-get install -y maven docker.io gettext-base
+#       - curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+#       - chmod +x kubectl
+#       - mv kubectl /usr/local/bin/
 
   pre_build:
     commands:
