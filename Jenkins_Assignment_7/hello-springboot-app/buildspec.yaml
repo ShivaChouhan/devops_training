@@ -29,7 +29,13 @@ phases:
       - echo "Checking for ECR repository..."
       - aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION || aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION
       - echo "deleting previous image..."
-      - aws ecr batch-delete-image --repository-name $REPOSITORY_NAME --region $AWS_REGION --image-ids "$(aws ecr list-images --repository-name $REPOSITORY_NAME --region $AWS_REGION --query 'imageIds' --output json)" || echo "No images to delete"
+      - IMAGES_TO_DELETE=$(aws ecr list-images --repository-name $REPOSITORY_NAME --region $AWS_REGION --query 'imageIds[?type(imageTag)!=`string` || ends_with(imageTag, `latest`) == `false`].imageDigest' --output json)
+        if [ "$IMAGES_TO_DELETE" != "[]" ]; then
+          echo "Deleting untagged/non-latest images..."
+          aws ecr batch-delete-image --repository-name $REPOSITORY_NAME --region $AWS_REGION --image-ids "$IMAGES_TO_DELETE" || echo "No images deleted"
+        else
+          echo "No images to delete"
+        fi
 
   build:
     commands:
