@@ -28,14 +28,6 @@ phases:
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - echo "Checking for ECR repository..."
       - aws ecr describe-repositories --repository-names $REPOSITORY_NAME --region $AWS_REGION || aws ecr create-repository --repository-name $REPOSITORY_NAME --region $AWS_REGION
-      - echo "deleting previous image..."
-      - IMAGES_TO_DELETE=$(aws ecr list-images --repository-name $REPOSITORY_NAME --region $AWS_REGION --query 'imageIds[?type(imageTag)!=`string` || ends_with(imageTag, `latest`) == `false`].imageDigest' --output json)
-        if [ "$IMAGES_TO_DELETE" != "[]" ]; then
-          echo "Deleting untagged/non-latest images..."
-          aws ecr batch-delete-image --repository-name $REPOSITORY_NAME --region $AWS_REGION --image-ids "$IMAGES_TO_DELETE" || echo "No images deleted"
-        else
-          echo "No images to delete"
-        fi
 
   build:
     commands:
