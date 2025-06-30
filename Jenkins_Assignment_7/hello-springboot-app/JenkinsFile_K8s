@@ -13,7 +13,7 @@ pipeline {
             steps {
                 dir('Jenkins_Assignment_7/hello-springboot-app') {
                     sh '''
-                    // eval $(minikube docker-env) 
+                    eval $(minikube docker-env) 
                     docker build -t hello-springboot-app:$BUILD_NUMBER . 
                     '''
                 }
@@ -24,7 +24,7 @@ pipeline {
                 dir('Jenkins_Assignment_7/hello-springboot-app') {
                     echo 'Deploying to Minikube...'
                     sh '''
-                        // eval $(minikube docker-env)
+                        eval $(minikube docker-env)
                         sed "s|hello-springboot-app:latest|hello-springboot-app:${BUILD_NUMBER}|g" deployment.yaml > deployment-temp.yaml
                         kubectl apply -f deployment-temp.yaml
                     '''
@@ -35,7 +35,7 @@ pipeline {
     post {
         success {
             sh ''' 
-                // eval $(minikube docker-env)
+                eval $(minikube docker-env)
                 echo "Service URL:"
                 minikube service hello-springboot-app-service --url || true 
             '''
