@@ -2,8 +2,6 @@
 
 This project demonstrates a simple Java Spring Boot web application, containerized with Docker, and automated using Jenkins pipelines for CI/CD. The application is deployed to a Kubernetes cluster (Minikube) as part of the workflow.
 
-
-
 ## 🖥️ Virtual Machine Setup
 Before starting the project, two VMs were set up using Oracle VirtualBox:
 - 🖥️ **Master VM**: Acts as the Jenkins master node. Jenkins was installed and accessed via a web browser on this VM.
@@ -147,4 +145,4 @@ kubectl apply -f deployment.yaml
 - 📥 When adding a new slave node (agent) in Jenkins using the "Launch agent by connecting it to the controller" method, Jenkins provides a command to run on the slave VM. This command downloads the `agent.jar` file from the Jenkins master (controller) to the slave VM, or you can transfer it using `scp` if needed.
 - 🔗 The `agent.jar` file is responsible for establishing a connection between the slave node and the Jenkins master, allowing the agent to receive and execute jobs.
 
-......... .
+.........
