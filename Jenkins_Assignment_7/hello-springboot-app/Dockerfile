@@ -2,7 +2,6 @@
 #for jenkins ans github actions
 # FROM openjdk:17-jdk-slim
 
-
 #for aws code_pipeline 
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:17
 VOLUME /tmp
