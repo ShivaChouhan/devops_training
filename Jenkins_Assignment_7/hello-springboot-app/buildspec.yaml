@@ -27,12 +27,12 @@ phases:
       - cd Jenkins_Assignment_7/hello-springboot-app
       - mvn clean package
       - echo "Building Docker image with tag $DOCKER_TAG..."
-      - docker build -t hello-springboot-app:$DOCKER_TAG .
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$DOCKER_TAG .
 
   post_build:
     commands:
       - echo "Pushing Docker image to ECR..."
-      - docker push hello-springboot-app:$DOCKER_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$DOCKER_TAG
       - echo "Configuring kubectl..."
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
       - echo "Updating deployment..."
