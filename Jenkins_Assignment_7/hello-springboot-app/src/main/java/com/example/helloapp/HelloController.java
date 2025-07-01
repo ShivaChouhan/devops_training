@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
     @GetMapping("/hello")
     public String sayHello() {
-        return "H ."; // Chatnged to a more friendly greeting
+        return "Hello this is my java application."; // Changed to a more friendly greeting
     }
 }
