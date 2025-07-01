@@ -44,10 +44,10 @@ phases:
 
       - echo "Verifying deployment..."
       - kubectl get deployments
-      - kubectl describe deployment hello-springboot-app
+      # - kubectl describe deployment hello-springboot-app
       - kubectl get pods
       - kubectl get svc hello-springboot-app-service
-      # - kubectl rollout status deployment/hello-springboot-app --timeout=300s
+      - kubectl rollout status deployment/hello-springboot-app --timeout=300s
       - echo "Service URL:"
       - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
 
