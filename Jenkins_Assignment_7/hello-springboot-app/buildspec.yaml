@@ -44,6 +44,4 @@ phases:
       - kubectl rollout status deployment/hello-springboot-app --timeout=60s
       - echo "Verifying deployment..."
       - kubectl get deployments
-      # - echo "Service URL:"
-      # - kubectl get svc hello-springboot-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-
+     
