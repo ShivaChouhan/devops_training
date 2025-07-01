@@ -35,8 +35,12 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$DOCKER_TAG
       - echo "Configuring kubectl..."
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
-      - echo "Updating deployment..."
-      - kubectl set image deployment/hello-springboot-app hello-springboot-app=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$DOCKER_TAG
+      # - echo "Updating deployment..."
+      # - kubectl set image deployment/hello-springboot-app hello-springboot-app=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$DOCKER_TAG
+      
+      - echo "Making deployment..."
+      - kubectl apply -f deployment.yaml
+      
       - echo "Verifying deployment..."
       - kubectl rollout status deployment/hello-springboot-app --timeout=300s
       - echo "Service URL:"
