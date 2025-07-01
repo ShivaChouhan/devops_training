@@ -32,7 +32,7 @@ phases:
   post_build:
     commands:
       - echo "Pushing Docker image to ECR..."
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$DOCKER_TAG
+      - docker push hello-springboot-app:$DOCKER_TAG
       - echo "Configuring kubectl..."
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
       - echo "Updating deployment..."
