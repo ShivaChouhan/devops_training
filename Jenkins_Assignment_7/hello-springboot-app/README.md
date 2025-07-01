@@ -162,3 +162,5 @@ curl -u "$USERNAME:$API_TOKEN" -H "$CRUMB" \
   "http://JENKINS_URL/job/JOB_NAME/lastBuild/consoleText"
 
 -For API_Token: Jenkins->Profile->security->API Token 
+
+-----
