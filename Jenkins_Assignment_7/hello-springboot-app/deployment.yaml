@@ -26,11 +26,16 @@ kind: Service
 metadata:
   name: hello-springboot-app-service
 spec:
-  type: NodePort
+  # type: NodePort
+  type: LoadBalancer
   selector:
     app: hello-springboot-app
+  # ports:
+  #   - protocol: TCP
+  #     port: 8080
+  #     targetPort: 8080
+  #     nodePort: 30500
   ports:
     - protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
-      nodePort: 30500
