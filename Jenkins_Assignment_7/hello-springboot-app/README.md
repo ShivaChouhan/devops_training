@@ -164,3 +164,127 @@ curl -u "$USERNAME:$API_TOKEN" -H "$CRUMB" \
 -For API_Token: Jenkins->Profile->security->API Token 
 
 -----
+
+# Jenkins SSH-Based Linux Slave (Agent) Setup
+
+This guide explains how to configure a Linux machine as a Jenkins slave (agent) using **SSH key authentication**.
+
+---
+
+## 🔧 Step 1: Jenkins Master Setup
+- Jenkins is installed on a master machine (e.g., Windows laptop).
+- Access Jenkins at: `http://localhost:8080`
+- Goal: Connect a Linux slave (agent) to Jenkins master.
+
+---
+
+## 🧩 Step 2: Create Node in Jenkins
+- Go to **Manage Jenkins** → **Manage Nodes and Clouds**
+- Click **New Node**
+- Enter a name (e.g., `devops_test`)
+- Select **Permanent Agent**, then click **Create**
+
+---
+
+## ⚙️ Step 3: Configure Node Details
+- **Description**: (Optional)
+- **Number of Executors**: Set based on CPU cores (e.g., `2`)
+- **Remote Root Directory**: Directory on agent (e.g., `/opt/jenkins`)
+  > Create it on slave: `sudo mkdir -p /opt/jenkins && sudo chown -R <user> /opt/jenkins`
+- **Labels**: e.g., `dev`, for job targeting
+- **Usage**: Leave default or customize
+
+---
+
+## 🚀 Step 4: Launch Method
+- Choose: **Launch agent via SSH**
+- Set **Host** to slave’s IP or hostname
+
+---
+
+## 🔐 Step 5: Generate SSH Key
+On your local or Jenkins master machine:
+
+```sh
+ssh-keygen
+```
+
+## 🔐 SSH Key Generation
+
+- Accept defaults  
+- Leave passphrase **empty**
+
+This creates:
+
+- **Private Key**: `~/.ssh/id_rsa`  
+- **Public Key**: `~/.ssh/id_rsa.pub`
+
+---
+
+## 🔑 Step 6: Add SSH Credentials in Jenkins
+
+Go to:
+
+**Manage Jenkins → Credentials → System → Global Credentials**
+
+Add:
+
+- **Kind**: SSH Username with private key  
+- **Username**: User on slave machine (e.g., `ubuntu`, `root`)  
+- **Private Key**: Paste `~/.ssh/id_rsa` content  
+- **Host Key Verification Strategy**: Non-verifying (for test setup)
+
+---
+
+## 🖥️ Step 7: Set Up Public Key on Slave Machine
+
+On the Linux agent:
+
+```bash
+mkdir -p ~/.ssh
+nano ~/.ssh/authorized_keys
+```
+
+Paste contents of `id_rsa.pub` from Jenkins master into this file, then run:
+
+```bash
+chmod 600 ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+```
+
+---
+
+## 🔗 Step 8: Launch Agent
+
+In Jenkins:
+
+- Save the node configuration  
+- Click **Launch agent**
+
+Jenkins will:
+
+- Connect via SSH  
+- Push agent JAR  
+- Start the slave
+
+---
+
+## ✅ Step 9: Verify Connection
+
+- Node should be **online** and **idle**  
+- You can now assign jobs using **labels** or **node selector**
+
+---
+
+## 📝 Notes
+
+- Avoid running builds on **master**  
+- Use **SSH key-based auth** for better security  
+- Adjust number of **executors** based on CPU  
+- For production: configure **stricter host key checking**
+
+---
+
+## 🏁 Success!
+
+You now have a **Jenkins master-slave setup** with a Linux agent using **SSH authentication** 🎉
