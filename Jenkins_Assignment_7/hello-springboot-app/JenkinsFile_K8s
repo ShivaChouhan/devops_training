@@ -1,5 +1,5 @@
 pipeline {
-    agent { label "TestSSHAgent" }
+    agent { label "java-node" }
     stages {
         
         stage('Build JAR') {
