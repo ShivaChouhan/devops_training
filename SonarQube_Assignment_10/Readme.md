@@ -1,3 +1,8 @@
+# Commands to change java versions
+```bash
+sudo update-alternatives --config java
+```
+
 # How to Use SonarQube on Ubuntu 22.04 LTS
 
 > Source: [https://docs.vultr.com/how-to-use-sonarqube-on-ubuntu-22-04-lts#5-install-sonarqube-on-ubuntu-2204](https://docs.vultr.com/how-to-use-sonarqube-on-ubuntu-22-04-lts#5-install-sonarqube-on-ubuntu-2204)
