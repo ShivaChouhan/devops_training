@@ -1,0 +1,408 @@
+# How to Use SonarQube on Ubuntu 22.04 LTS
+
+> Source: [https://docs.vultr.com/how-to-use-sonarqube-on-ubuntu-22-04-lts#5-install-sonarqube-on-ubuntu-2204](https://docs.vultr.com/how-to-use-sonarqube-on-ubuntu-22-04-lts#5-install-sonarqube-on-ubuntu-2204)
+
+## Prerequisites
+
+- Deploy a Ubuntu 22.04 server with at least 2GB of RAM and one vCPU core.
+- Create a non-root user with sudo privileges.
+- Update the server.
+- A fully-qualified domain name (e.g., `sonarqube.example.com`) pointing to your server.
+
+## 1. Configure Firewall
+
+```bash
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw status
+```
+
+## 2. Install OpenJDK
+
+```bash
+sudo apt install openjdk-11-jdk
+```
+
+## 3. Install PostgreSQL
+
+```bash
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo systemctl status postgresql
+```
+
+## 4. Configure PostgreSQL
+
+```bash
+sudo -u postgres psql
+```
+
+Inside the psql shell:
+
+```sql
+CREATE ROLE sonaruser WITH LOGIN ENCRYPTED PASSWORD 'your_password';
+CREATE DATABASE sonarqube;
+GRANT ALL PRIVILEGES ON DATABASE sonarqube to sonaruser;
+\q
+exit
+```
+
+## 5. Install SonarQube on Ubuntu 22.04
+
+```bash
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.6.1.59531.zip
+unzip -q sonarqube-9.6.1.59531.zip
+sudo mv sonarqube-9.6.1.59531 /opt/sonarqube
+rm sonarqube-9.6.1.59531.zip
+```
+
+## 6. Create SonarQube User
+
+```bash
+sudo adduser --system --no-create-home --group --disabled-login sonarqube
+sudo chown sonarqube:sonarqube /opt/sonarqube -R
+```
+
+## 7. Configure SonarQube Server
+
+Edit SonarQube config:
+
+```bash
+sudo nano /opt/sonarqube/conf/sonar.properties
+```
+
+Uncomment and set:
+
+```ini
+sonar.jdbc.username=sonaruser
+sonar.jdbc.password=your_password
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+sonar.web.javaAdditionalOpts=-server
+sonar.web.host=127.0.0.1
+```
+
+Edit sysctl config:
+
+```bash
+sudo nano /etc/sysctl.conf
+```
+
+Append:
+
+```conf
+vm.max_map_count=524288
+fs.file-max=131072
+```
+
+Edit limits config:
+
+```bash
+sudo nano /etc/security/limits.d/99-sonarqube.conf
+```
+
+Add:
+
+```conf
+sonarqube   -   nofile   131072
+sonarqube   -   nproc    8192
+```
+
+Reboot:
+
+```bash
+sudo reboot
+```
+
+## 8. Setup Sonar Service
+
+```bash
+sudo nano /etc/systemd/system/sonarqube.service
+```
+
+Paste:
+
+```ini
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+
+User=sonarqube
+Group=sonarqube
+PermissionsStartOnly=true
+Restart=always
+
+StandardOutput=syslog
+LimitNOFILE=131072
+LimitNPROC=8192
+TimeoutStartSec=5
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then run:
+
+```bash
+sudo systemctl start sonarqube
+sudo systemctl status sonarqube
+sudo systemctl enable sonarqube
+```
+
+
+## Error I have faced on the setup of sonarqube
+
+```bash
+2025.07.06 13:46:08 ERROR web[][o.s.s.p.PlatformImpl] Web server startup failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jdk.internal.loader.ClassLoaders$AppClassLoader@55054057-org.sonar.server.platform.db.migration.history.MigrationHistoryTableImpl': Initialization of bean failed; nested exception is java.lang.IllegalStateException: Failed to create table schema_migrations
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:628)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:953)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.sonar.core.platform.SpringComponentContainer.startComponents(SpringComponentContainer.java:187)
+	at org.sonar.server.platform.platformlevel.PlatformLevel.start(PlatformLevel.java:80)
+	at org.sonar.server.platform.platformlevel.PlatformLevel2.start(PlatformLevel2.java:105)
+	at org.sonar.server.platform.PlatformImpl.start(PlatformImpl.java:196)
+	at org.sonar.server.platform.PlatformImpl.startLevel2Container(PlatformImpl.java:169)
+	at org.sonar.server.platform.PlatformImpl.init(PlatformImpl.java:77)
+	at org.sonar.server.platform.web.PlatformServletContextListener.contextInitialized(PlatformServletContextListener.java:43)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4768)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5230)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1396)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1386)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:140)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:919)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:835)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1396)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1386)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:140)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:919)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:263)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:432)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:927)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:486)
+	at org.sonar.server.app.EmbeddedTomcat.start(EmbeddedTomcat.java:72)
+	at org.sonar.server.app.WebServer.start(WebServer.java:55)
+	at org.sonar.process.ProcessEntryPoint.launch(ProcessEntryPoint.java:97)
+	at org.sonar.process.ProcessEntryPoint.launch(ProcessEntryPoint.java:81)
+	at org.sonar.server.app.WebServer.main(WebServer.java:104)
+Caused by: java.lang.IllegalStateException: Failed to create table schema_migrations
+	at org.sonar.server.platform.db.migration.history.MigrationHistoryTableImpl.start(MigrationHistoryTableImpl.java:48)
+	at org.sonar.core.platform.StartableBeanPostProcessor.postProcessBeforeInitialization(StartableBeanPostProcessor.java:33)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1796)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620)
+	... 44 common frames omitted
+Caused by: org.postgresql.util.PSQLException: ERROR: permission denied for schema public
+  Position: 14
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2676)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2366)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:356)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:490)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:408)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:329)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:315)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:291)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:286)
+	at org.apache.commons.dbcp2.DelegatingStatement.execute(DelegatingStatement.java:193)
+	at org.apache.commons.dbcp2.DelegatingStatement.execute(DelegatingStatement.java:193)
+	at org.sonar.server.platform.db.migration.history.MigrationHistoryTableImpl.execute(MigrationHistoryTableImpl.java:71)
+	at org.sonar.server.platform.db.migration.history.MigrationHistoryTableImpl.createTable(MigrationHistoryTableImpl.java:59)
+	at org.sonar.server.platform.db.migration.history.MigrationHistoryTableImpl.start(MigrationHistoryTableImpl.java:45)
+	... 48 common frames omitted
+```
+
+# Fix: Grant PostgreSQL Privileges to SonarQube User
+
+If SonarQube fails to start due to database permission issues, follow these steps to grant the required privileges to your PostgreSQL user.
+
+---
+
+## 🧾 Assumptions
+
+- PostgreSQL is running
+- Database name is `sonarqube`
+- SonarQube connects using PostgreSQL user `sonaruser`
+
+---
+
+## 🛠 Steps to Fix
+
+### 🔹 1. Access PostgreSQL as the `postgres` superuser
+
+```bash
+sudo -u postgres psql
+```
+
+---
+
+### 🔹 2. List all databases (to confirm the `sonarqube` DB exists)
+
+```sql
+\l
+```
+
+Look for the database named `sonarqube`.
+
+---
+
+### 🔹 3. Connect to the `sonarqube` database
+
+```sql
+\c sonarqube
+```
+
+---
+
+### 🔹 4. Grant ownership and privileges to the `sonaruser`
+
+```sql
+ALTER SCHEMA public OWNER TO sonaruser;
+GRANT ALL PRIVILEGES ON SCHEMA public TO sonaruser;
+GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonaruser;
+```
+
+---
+
+### 🔹 5. Exit PostgreSQL
+
+```sql
+\q
+```
+
+---
+
+### 🔁 6. Restart SonarQube
+
+#### If using the shell script:
+
+```bash
+cd /opt/sonarqube
+./bin/linux-x86-64/sonar.sh restart
+```
+
+#### If using `systemd`:
+
+```bash
+sudo systemctl restart sonarqube
+```
+
+---
+
+## ✅ Done!
+
+## 2nd Error
+
+```bash
+
+2025.07.06 13:50:09 INFO  app[][o.s.a.SchedulerImpl] Process[ElasticSearch] is stopped
+2025.07.06 13:50:09 INFO  app[][o.s.a.SchedulerImpl] Waiting for Elasticsearch to be up and running
+2025.07.06 13:50:09 INFO  app[][o.s.a.SchedulerImpl] SonarQube is stopped
+2025.07.06 13:50:11 INFO  app[][o.s.a.AppFileSystem] Cleaning or creating temp directory /opt/sonarqube/temp
+2025.07.06 13:50:11 INFO  app[][o.s.a.es.EsSettings] Elasticsearch listening on [HTTP: 127.0.0.1:9001, TCP: 127.0.0.1:37209]
+2025.07.06 13:50:11 ERROR app[][o.s.a.p.ManagedProcessHandler] Failed to launch process [ElasticSearch]
+java.lang.IllegalStateException: Could not delete Elasticsearch temporary conf directory
+	at org.sonar.application.ProcessLauncherImpl.pruneElasticsearchConfDirectory(ProcessLauncherImpl.java:168)
+	at org.sonar.application.ProcessLauncherImpl.writeConfFiles(ProcessLauncherImpl.java:155)
+	at org.sonar.application.ProcessLauncherImpl.launch(ProcessLauncherImpl.java:92)
+	at org.sonar.application.SchedulerImpl.lambda$tryToStartProcess$2(SchedulerImpl.java:197)
+	at org.sonar.application.process.ManagedProcessHandler.start(ManagedProcessHandler.java:76)
+	at org.sonar.application.SchedulerImpl.tryToStartProcess(SchedulerImpl.java:195)
+	at org.sonar.application.SchedulerImpl.tryToStartEs(SchedulerImpl.java:147)
+	at org.sonar.application.SchedulerImpl.tryToStartAll(SchedulerImpl.java:139)
+	at org.sonar.application.SchedulerImpl.schedule(SchedulerImpl.java:113)
+	at org.sonar.application.App.start(App.java:59)
+	at org.sonar.application.App.main(App.java:81)
+Caused by: java.nio.file.AccessDeniedException: /opt/sonarqube/temp/conf/es
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:90)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:116)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.implDelete(UnixFileSystemProvider.java:249)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.deleteIfExists(AbstractFileSystemProvider.java:110)
+	at java.base/java.nio.file.Files.deleteIfExists(Files.java:1181)
+	at org.sonar.application.ProcessLauncherImpl.pruneElasticsearchConfDirectory(ProcessLauncherImpl.java:166)
+	... 10 common frames omitted
+
+```
+	
+
+# Fix: SonarQube Fails Due to Elasticsearch Temp Directory Permission Issue
+
+## Problem
+
+SonarQube is failing to start due to permission issues on the Elasticsearch temporary configuration directory:
+
+```
+Caused by: java.nio.file.AccessDeniedException: /opt/sonarqube/temp/conf/es
+```
+
+## ✅ Solution
+
+### 1. Fix Permissions
+
+Ensure the SonarQube service user (typically `sonarqube`) has write access to the temp directory:
+
+```bash
+sudo chown -R sonarqube:sonarqube /opt/sonarqube/temp
+sudo chmod -R 775 /opt/sonarqube/temp
+```
+
+### 2. Verify the SonarQube User
+
+Ensure the systemd service runs as the correct user. Check `/etc/systemd/system/sonarqube.service` contains:
+
+```ini
+User=sonarqube
+Group=sonarqube
+```
+
+### 3. Clean Up Temp Directory (Optional)
+
+If problems persist, delete the temp configuration directory. SonarQube will recreate it on startup:
+
+```bash
+sudo rm -rf /opt/sonarqube/temp/conf/es
+```
+
+### 4. Restart SonarQube
+
+Reset the failed systemd state and start the service again:
+
+```bash
+sudo systemctl reset-failed sonarqube
+sudo systemctl start sonarqube
+```
+
+### 5. Check Logs Again
+
+Monitor the logs to confirm that SonarQube is now starting correctly:
+
+```bash
+sudo tail -f /opt/sonarqube/logs/sonar.log
+```
+## ✅ Done!
+
+SonarQube should now start successfully.	
+	
