@@ -161,7 +161,11 @@ sudo systemctl start sonarqube
 sudo systemctl status sonarqube
 sudo systemctl enable sonarqube
 ```
+# To check sonarqube logs
 
+```bash
+sudo cat /opt/sonarqube/logs/sonar.log
+```
 
 ## Error I have faced on the setup of sonarqube
 
