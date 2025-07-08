@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('SCM Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ShivaChouhan/devops_training.git'
+            }
+        }
+        stage('Build JAR') {
+            steps {
+                dir('SonarQube_Assignment_10/hello-springboot-app') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+        stage('SonarQube analysis') {
+            steps{
+                withSonarQubeEnv('sonarqube-9.6.1') { 
+                    dir('SonarQube_Assignment_10/hello-springboot-app') {
+                        sh "mvn sonar:sonar"
+                    }    
+                }
+            }
+        }
+    }
+}
+
+
