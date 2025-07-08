@@ -415,3 +415,75 @@ sudo tail -f /opt/sonarqube/logs/sonar.log
 
 SonarQube should now start successfully.	
 	
+
+# SonarQube Integration with Jenkins - Detailed Notes
+
+
+## Overview
+- The video explains how to integrate SonarQube with Jenkins to run code quality analysis automatically whenever a Jenkins job is executed.
+- It builds on previous lectures covering SonarQube setup and overview.
+
+## Prerequisites
+- SonarQube server must be set up and running.
+- Jenkins server must be set up and running.
+- Both servers in the example are launched on AWS.
+
+## Integration Steps
+
+1. **Generate SonarQube Token**
+   - Generate an authentication token on the SonarQube server.
+   - This token will be used by Jenkins to authenticate with SonarQube.
+
+2. **Install SonarQube Plugin on Jenkins**
+   - Go to Jenkins → Manage Jenkins → Manage Plugins → Available.
+   - Search for "SonarQube Scanner" plugin and install it without restart.
+
+3. **Configure SonarQube Credentials in Jenkins**
+   - Go to Jenkins → Manage Jenkins → Manage Credentials → Global credentials.
+   - Add a new credential of type "Secret text".
+   - Paste the SonarQube token as the secret text.
+   - Name the credential (e.g., "sonarCube token").
+
+4. **Add SonarQube Server in Jenkins**
+   - Go to Jenkins → Manage Jenkins → Configure System.
+   - Scroll to SonarQube servers section.
+   - Enable environment variable checkbox.
+   - Add SonarQube server details:
+     - Name (e.g., "sonarCube 8.9.2").
+     - URL (use private IP in production to avoid IP changes).
+     - Authentication token (select the credential created earlier).
+
+5. **Install SonarQube Scanner**
+   - Either install manually on Jenkins server via SSH or
+   - Use Jenkins → Manage Jenkins → Global Tool Configuration.
+   - Add SonarQube Scanner with automatic installation (e.g., version 4.6.2).
+
+6. **Create Jenkins Pipeline Job**
+   - Create a new pipeline job in Jenkins.
+   - Use a pipeline script that:
+     - Checks out the code.
+     - Builds the code using Maven (`mvn clean package`).
+     - Runs SonarQube analysis using Maven sonar goal (`mvn sonar:sonar`).
+   - Adjust Maven path and SonarQube scanner name as per your environment.
+
+## Running the Job and Viewing Reports
+- When the pipeline runs:
+  - Code is cloned and built.
+  - SonarQube analysis runs and sends results to SonarQube server.
+- The analysis report shows:
+  - Number of bugs, vulnerabilities, code smells, and security hotspots.
+  - Detailed information on each issue with recommendations.
+- Developers can review these reports to improve code quality.
+
+## Quality Profiles and Gates
+- SonarQube uses **Quality Profiles** to apply rules for code analysis.
+- For Java, default profile "Sonar way" is used.
+- You can create custom profiles and activate more rules.
+- Quality Gates define thresholds for bugs, vulnerabilities, etc.
+- If thresholds are not met, the build can be marked as failed.
+
+---
+
+*This summary covers the integration process, configuration, running the analysis, and interpreting the results.*  
+   
+```
