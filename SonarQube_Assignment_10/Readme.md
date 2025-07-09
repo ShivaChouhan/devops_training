@@ -482,8 +482,82 @@ SonarQube should now start successfully.
 - Quality Gates define thresholds for bugs, vulnerabilities, etc.
 - If thresholds are not met, the build can be marked as failed.
 
+
+
+# How to Monitor a Node.js Application with SonarQube
+
+You can use SonarQube to analyze and monitor the code quality of your Node.js application. Here’s a step-by-step guide:
+
 ---
 
-*This summary covers the integration process, configuration, running the analysis, and interpreting the results.*  
-   
+## 1. Set Up SonarQube Server
+
+- Install SonarQube on your local machine or use a hosted instance.
+- Start SonarQube and access it at [http://localhost:9000](http://localhost:9000) (default).
+
+---
+
+## 2. Install SonarScanner
+
+For Node.js projects, use the [SonarScanner CLI](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/):
+
+```sh
+npm install -g sonarqube-scanner
 ```
+or download and extract the [SonarScanner CLI](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner-cli/).
+
+---
+
+## 3. Configure SonarQube Project
+
+- In the SonarQube UI, create a new project and generate a project key and token.
+
+---
+
+## 4. Add a `sonar-project.properties` File
+
+Create a file named `sonar-project.properties` in your project root:
+
+```
+sonar.projectKey=node-file-demo
+sonar.projectName=Node File Demo
+sonar.host.url=http://localhost:9000
+sonar.login=<your_sonarqube_token>
+sonar.sources=.
+sonar.exclusions=node_modules/**
+```
+Replace `<your_sonarqube_token>` with your actual token.
+
+---
+
+## 5. Run SonarScanner
+
+From your project root, run:
+
+```sh
+sonar-scanner
+```
+or, if you installed with npm:
+
+```sh
+npx sonarqube-scanner
+```
+
+---
+
+## 6. View Results
+
+- Go to your SonarQube dashboard (http://localhost:9000).
+- Open your project to see code quality, bugs, vulnerabilities, and code smells.
+
+---
+
+## Summary
+
+- Install and start SonarQube.
+- Install SonarScanner.
+- Add a `sonar-project.properties` file.
+- Run `sonar-scanner` in your project directory.
+- View your analysis in the SonarQube UI.
+
+n
