@@ -17,5 +17,5 @@ public class HelloController {
     //     // ⚠️ CodeQL will flag this as a security issue (command injection)
     //     Runtime.getRuntime().exec(cmd);
     //     return "Command executed: " + cmd;
-    }
+    // }
 }
