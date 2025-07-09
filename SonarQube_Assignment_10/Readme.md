@@ -519,7 +519,7 @@ or download and extract the [SonarScanner CLI](https://docs.sonarsource.com/sona
 Create a file named `sonar-project.properties` in your project root:
 
 ```
-sonar.projectKey=node-file-demo
+sonar.projectKey=node-file-demo(same as token name)
 sonar.projectName=Node File Demo
 sonar.host.url=http://localhost:9000
 sonar.login=<your_sonarqube_token>
