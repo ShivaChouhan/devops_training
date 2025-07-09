@@ -560,4 +560,60 @@ npx sonarqube-scanner
 - Run `sonar-scanner` in your project directory.
 - View your analysis in the SonarQube UI.
 
-n
+
+## Custom rule
+
+
+## Enforcing No `System.out.println` with SonarQube (Rule: java:S106)
+
+### 1. Find the Built-in Rule
+
+- Go to your **SonarQube UI**.
+- Navigate to **Quality Profiles > Java**.
+- Search for:  
+  **“Replace this use of System.out or System.err by a logger.”**  
+  - **Rule key:** `java:S106`
+  - **Rule name:** Standard outputs should not be used directly to log anything
+
+---
+
+### 2. Activate the Rule in Your Quality Profile
+
+- If it’s not already active, **activate** this rule in your quality profile.
+- Optionally, set its severity to **“Blocker”** or **“Critical”**.
+
+---
+
+### 3. Assign the Quality Profile to Your Project
+
+- Go to your project in SonarQube.
+- Navigate to **Project Settings > Quality Profiles**.
+- Make sure your project uses the profile where you activated the rule.
+
+---
+
+### 4. Re-Analyze Your Project
+
+- Run `sonar-scanner` in your Java project directory.
+- SonarQube will now flag any use of `System.out.println` or `System.err.println` as an issue.
+
+---
+
+### **Result Example**
+
+In your code:
+```java
+System.out.println("Hello this is my java application.");
+```
+SonarQube will report this line as a violation of rule **java:S106**.
+
+---
+
+## How to Assign a Custom Quality Profile to a Project
+
+1. Go to your project in the SonarQube UI.
+2. In the left sidebar, click on **Project Settings > Quality Profiles**.
+3. You will see a list of languages (e.g., Java, JavaScript, etc.).
+4. For **Java**, click the dropdown next to the current profile.
+5. **Select your custom profile** (`custom_rule_check`) from the list.
+6. The profile will now be used for this project’s Java
