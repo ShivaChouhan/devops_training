@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Setup Python Virtual Env') {
             steps {
-                dir('python_sonar_jenkins_project') {
+                dir('SonarQube_Assignment_10/python_sonar_jenkins_project') {
                     sh '''
                         python3 -m venv venv
                         source venv/bin/activate
@@ -21,7 +21,7 @@ pipeline {
 
         stage('Run Tests and Generate Coverage') {
             steps {
-                dir('python_sonar_jenkins_project') {
+                dir('SonarQube_Assignment_10/python_sonar_jenkins_project') {
                     sh '''
                         source venv/bin/activate
                         coverage run -m pytest
@@ -34,7 +34,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                dir('python_sonar_jenkins_project') {
+                dir('SonarQube_Assignment_10/python_sonar_jenkins_project') {
                     withSonarQubeEnv('Sonar_Local') {
                         sh '''
                             source venv/bin/activate
