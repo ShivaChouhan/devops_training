@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_SCANNER_HOME = tool 'SonarQubeScanner-7.1.0.4889'  // Ensure this tool is configured
+        SONAR_SCANNER_HOME = tool 'SonarQubeScanner-7.1.0.4889'
     }
 
     stages {
@@ -11,7 +11,7 @@ pipeline {
                 dir('SonarQube_Assignment_10/python_sonar_jenkins_project') {
                     sh '''
                         python3 -m venv venv
-                        source venv/bin/activate
+                        . venv/bin/activate
                         pip install --upgrade pip
                         pip install pytest coverage
                     '''
@@ -37,7 +37,7 @@ pipeline {
                 dir('SonarQube_Assignment_10/python_sonar_jenkins_project') {
                     withSonarQubeEnv('Sonar_Local') {
                         sh '''
-                            source venv/bin/activate
+                            . venv/bin/activate
                             ${SONAR_SCANNER_HOME}/bin/sonar-scanner
                         '''
                     }
