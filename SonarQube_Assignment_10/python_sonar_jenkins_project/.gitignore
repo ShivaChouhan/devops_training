@@ -1,0 +1,21 @@
+# Python virtual environment
+venv/
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Coverage reports
+.coverage
+coverage.xml
+
+# SonarQube scanner output
+.scannerwork/
+
+# Logs
+*.log
+
+# OS/system files
+.DS_Store
+Thumbs.db

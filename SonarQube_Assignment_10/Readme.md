@@ -617,3 +617,109 @@ SonarQube will report this line as a violation of rule **java:S106**.
 4. For **Java**, click the dropdown next to the current profile.
 5. **Select your custom profile** (`custom_rule_check`) from the list.
 6. The profile will now be used for this project’s Java
+
+
+# Python SonarQube Jenkins Project
+
+This project demonstrates how to set up a Python application with automated testing, coverage reporting, and SonarQube analysis. It is designed to be integrated with Jenkins for CI/CD pipelines.
+
+---
+
+## 📦 Project Structure
+
+- `main.py` — Python source code
+- `test_main.py` — Unit tests
+- `Jenkinsfile` — Jenkins pipeline configuration
+- `sonar-project.properties` — SonarQube project configuration
+- `.coverage`, `coverage.xml` — Coverage reports (generated)
+- `venv/` — Python virtual environment (generated)
+- `.scannerwork/` — SonarQube scanner output (generated)
+
+---
+
+## 🚀 Setup & Usage
+
+### 1. Install Python Virtual Environment
+
+```bash
+sudo apt install python3.12-venv
+```
+
+### 2. Create and Activate Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install pytest coverage
+```
+
+### 4. Run Tests and Generate Coverage Report
+
+```bash
+coverage run -m pytest
+coverage report
+coverage xml
+```
+
+### 5. Run SonarQube Analysis
+
+```bash
+sudo sonar-scanner
+```
+
+---
+
+## 📝 SonarQube Configuration
+
+Ensure your `sonar-project.properties` includes:
+
+```properties
+sonar.projectKey=my-python-jenkins-project
+sonar.projectName=My Python Jenkins Project
+sonar.sources=.
+sonar.language=py
+sonar.host.url=http://localhost:9000
+sonar.login=<your_sonarqube_token>
+sonar.python.coverage.reportPaths=coverage.xml
+sonar.exclusions=venv/**
+sonar.python.version=3.12
+```
+
+Replace `<your_sonarqube_token>` with your actual token.
+
+---
+
+## 🛠 Jenkins Integration
+
+See the `Jenkinsfile` for a sample pipeline that:
+
+- Sets up a Python virtual environment
+- Installs dependencies
+- Runs tests and generates coverage
+- Runs SonarQube analysis
+
+---
+
+## 📊 View Results
+
+- Coverage results: `coverage report` (terminal), `coverage.xml` (file)
+- SonarQube dashboard: [http://localhost:9000](http://localhost:9000)
+
+---
+
+## 🧹 Clean Up
+
+To remove generated files and folders:
+
+```bash
+rm -rf venv .coverage coverage.xml .scannerwork __pycache__ .pytest_cache
+```
+
+---
+
+##
