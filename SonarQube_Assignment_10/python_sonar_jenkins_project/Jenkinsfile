@@ -35,7 +35,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('SonarQube_Assignment_10/python_sonar_jenkins_project') {
-                    withSonarQubeEnv('Sonar_Local') {
+                    withSonarQubeEnv('sonarqube-9.6.1') {
                         sh '''
                             . venv/bin/activate
                             ${SONAR_SCANNER_HOME}/bin/sonar-scanner
