@@ -23,7 +23,7 @@ pipeline {
             steps {
                 dir('SonarQube_Assignment_10/python_sonar_jenkins_project') {
                     sh '''
-                        source venv/bin/activate
+                        . venv/bin/activate
                         coverage run -m pytest
                         coverage report
                         coverage xml
