@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_SCANNER_HOME = tool 'Sonar_5'  // Ensure this tool is configured
+        SONAR_SCANNER_HOME = tool 'SonarQubeScanner-7.1.0.4889'  // Ensure this tool is configured
     }
 
     stages {
