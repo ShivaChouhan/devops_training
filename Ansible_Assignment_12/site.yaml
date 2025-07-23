@@ -1,8 +1,9 @@
 ---
-- name: Linux patching and Tomcat installation
+- name: Linux server setup
   hosts: all
   become: true
 
   roles:
     - linux_patching
     - tomcat_install
+    - dns_changes
