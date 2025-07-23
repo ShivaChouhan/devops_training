@@ -1,0 +1,8 @@
+---
+- name: Linux patching and Tomcat installation
+  hosts: all
+  become: true
+
+  roles:
+    - linux_patching
+    - tomcat_install

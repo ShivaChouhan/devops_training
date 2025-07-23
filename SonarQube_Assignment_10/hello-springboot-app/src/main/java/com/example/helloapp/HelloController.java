@@ -11,7 +11,7 @@ public class HelloController {
  
     @GetMapping("/hi")
     public String sayHello() {
-        return "Hi Raj Kashyap!!!!!! That's my Java application.";
+        return "Hi !!!!!! That's my Java application.";
     }
 
     // 🚨 Vulnerable endpoint (for testing CodeQL)
