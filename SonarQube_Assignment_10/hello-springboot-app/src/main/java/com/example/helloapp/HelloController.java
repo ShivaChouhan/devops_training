@@ -5,17 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
- 
-    @GetMapping("/hi")
+    @GetMapping("/hello")
     public String sayHello() {
-        return "Hi !!!!!! That's my Java application.";
+        return "Hello this is my java application."; // Changed to a more friendly greeting
     }
-
-    // 🚨 Vulnerable endpoint (for testing CodeQL)
-    // @GetMapping("/run")
-    // public String runCommand(@RequestParam String cmd) throws IOException {
-    //     // ⚠️ CodeQL will flag this as a security issue (command injection)
-    //     Runtime.getRuntime().exec(cmd);
-    //     return "Command executed: " + cmd;
-    // }
 }
