@@ -1,0 +1,15 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for win_iis
+-
+- name: Install IIS
+  win_feature:
+    name: Web-Server
+    state: present
+    include_management_tools: yes
+
+- name: Ensure IIS service is running
+  win_service:
+    name: W3SVC
+    state: started
+    start_mode: auto
