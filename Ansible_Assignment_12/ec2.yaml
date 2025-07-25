@@ -1,0 +1,31 @@
+---
+- name: Provision EC2 Instance on AWS
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Launch EC2 instance using updated Terraform-like config
+      amazon.aws.ec2_instance:
+        name: Automated-instance-terraform
+        key_name: ansible_key
+        instance_type: t2.micro
+        image_id: ami-020cba7c55df1f615   # Ubuntu
+        region: us-east-1
+        wait: yes
+        count: 1
+
+        # Use default VPC (omit subnet if not needed)
+        # You can leave out subnet if using default
+
+        security_group: automate-sg  # name of the SG, just like in your Terraform
+
+        tags:
+          Name: Automated-instance-terraform
+          Environment: dev
+
+      register: ec2_result
+
+    - name: Show result of EC2 provisioning
+      debug:
+        var: ec2_result
