@@ -5,7 +5,17 @@
   gather_facts: false
 
   tasks:
-    - name: Create security group 
+    # First upload the key to AWS
+    - name: Upload SSH key to AWS
+      amazon.aws.ec2_key:
+        name: ansibel_key
+        key_material: "{{ lookup('file', '/home/ubuntu/keys/ansibel_key.pub') }}"
+        region: us-east-1
+      register: key_upload
+      tags: key
+
+    # Create security group
+    - name: Create security group
       amazon.aws.ec2_security_group:
         name: ansible-sg
         description: "Security group for Ansible automation"
@@ -14,36 +24,33 @@
           - proto: tcp
             from_port: 22
             to_port: 22
-            cidr_ip: 0.0.0.0/0  # Allow SSH from anywhere (adjust for security)
+            cidr_ip: 0.0.0.0/0
           - proto: tcp
             from_port: 80
             to_port: 80
-            cidr_ip: 0.0.0.0/0  # Allow HTTP (optional)
+            cidr_ip: 0.0.0.0/0
         tags:
           Name: ansible-sg
       register: sg_result
-    - name: Launch EC2 instance using updated Terraform-like config
+      tags: security
+
+    # Launch instance using the uploaded key
+    - name: Launch EC2 instance
       amazon.aws.ec2_instance:
         name: Automated-instance-terraform
-        # name: ansibel_key
-        key_material: "{{ lookup('file', '/home/ubuntu/keys/ansibel_key.pub') }}"
+        key_name: ansibel_key  # Only use the key name here
         instance_type: t2.micro
-        image_id: ami-020cba7c55df1f615   # Ubuntu
+        image_id: ami-020cba7c55df1f615
         region: us-east-1
+        security_group: ansible-sg
         wait: yes
-        count: 1
-
-        # Use default VPC (omit subnet if not needed)
-        # You can leave out subnet if using default
-
-        security_group: ansible-sg  # name of the SG, just like in your Terraform
-
         tags:
           Name: Automated-instance-terraform
           Environment: dev
-
       register: ec2_result
+      tags: instance
 
     - name: Show result of EC2 provisioning
       debug:
         var: ec2_result
+      tags: debug
