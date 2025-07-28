@@ -35,7 +35,7 @@
         # Use default VPC (omit subnet if not needed)
         # You can leave out subnet if using default
 
-        security_group: automate-sg  # name of the SG, just like in your Terraform
+        security_group: ansible-sg  # name of the SG, just like in your Terraform
 
         tags:
           Name: Automated-instance-terraform
