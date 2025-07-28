@@ -5,6 +5,23 @@
   gather_facts: false
 
   tasks:
+    - name: Create security group 
+      amazon.aws.ec2_security_group:
+        name: ansible-sg
+        description: "Security group for Ansible automation"
+        region: us-east-1
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0  # Allow SSH from anywhere (adjust for security)
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0  # Allow HTTP (optional)
+        tags:
+          Name: ansible-sg
+      register: sg_result
     - name: Launch EC2 instance using updated Terraform-like config
       amazon.aws.ec2_instance:
         name: Automated-instance-terraform
