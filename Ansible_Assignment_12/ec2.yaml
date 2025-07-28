@@ -25,7 +25,7 @@
     - name: Launch EC2 instance using updated Terraform-like config
       amazon.aws.ec2_instance:
         name: Automated-instance-terraform
-        key_name: ansibel_key
+        name: ansibel_key
         key_material: "{{ lookup('file', '/home/ubuntu/keys/ansibel_key.pub') }}"
         instance_type: t2.micro
         image_id: ami-020cba7c55df1f615   # Ubuntu
