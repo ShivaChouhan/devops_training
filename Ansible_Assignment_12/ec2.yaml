@@ -2,7 +2,9 @@
 - name: Provision EC2 Instance on AWS
   hosts: localhost
   connection: local
-  gather_facts: false
+  # gather_facts: false
+  vars:
+    instance_state: present
 
   tasks:
     - name: Create security group 
@@ -21,7 +23,7 @@
             cidr_ip: 0.0.0.0/0  # Allow HTTP (optional)
         tags:
           Name: ansible-sg
-      register: sg_result
+      # register: sg_result
     - name: Launch EC2 instance using updated Terraform-like config
       amazon.aws.ec2_instance:
         name: Automated-instance-terraform
@@ -36,6 +38,7 @@
         # You can leave out subnet if using default
 
         security_group: ansible-sg  # name of the SG, just like in your Terraform
+        state: "{{ instance_state }}"
 
         tags:
           Name: Automated-instance-terraform
