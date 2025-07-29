@@ -85,6 +85,26 @@ ssh-keygen
 ```
 > And after that I provide a file name in which i want to store the key like:terra-key
 ---
+## configure aws cli
+
+First download aws cli
+
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
+## create the aws IAM user for Aws configure
+
+. create I am user.
+. Than create access key from IAM > Users > terra-admin > Create access key
+. Than configure AWS CLI by runnig the command
+
+```bash
+aws configure
+```
+. Then give the Access key ID which is present in downloaded csv file.
+. After that give the Secret access key which is also present in downloades csv.
 
 ## Terraform commands
 
