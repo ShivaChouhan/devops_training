@@ -7,7 +7,7 @@ curl -sSL https://raw.githubusercontent.com/GoogleCloudPlatform/kubectl-ai/main/
 Set your Gemini API key as an environment variable. If you don't have a key, get one from [Google AI Studio](https://aistudio.google.com).
 
 ```bash
-export GEMINI_API_KEY=AIzaSyBGGNKZx6A116uCqMJC2q-FlbfM4QOA0Po
+export GEMINI_API_KEY=AIza**************
 kubectl-ai
 
 # Use different gemini model
