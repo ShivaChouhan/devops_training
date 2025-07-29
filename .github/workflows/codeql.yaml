@@ -28,7 +28,8 @@ jobs:
           languages: java
 
       - name: Build project
-        run: mvn clean install -DskipTests
+        # run: mvn clean install -DskipTests
+        run: mvn clean install 
         working-directory: ./SonarQube_Assignment_10/hello-springboot-app
 
       - name: Perform CodeQL Analysis
