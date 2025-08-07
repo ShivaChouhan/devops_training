@@ -36,12 +36,6 @@ public class HelloController {
         return "Logged in with password: " + password;
     }
 
-    // 4. Now exposed as endpoint (previously unused)
-    @GetMapping("/calculate-sum")
-    public String calculateSumWrapper() {
-        return calculateSum("Result: "); // Now the private method is used
-    }
-
     private String calculateSum(String prefix) {
         int sum = 0;
         for (int i = 0; i < 5; i++) {
