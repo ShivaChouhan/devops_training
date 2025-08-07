@@ -30,22 +30,20 @@ public class HelloController {
     }
 
     
+    private String calculateSum(String prefix) {
+    int sum = 0;
+    for (int i = 0; i < 5; i++) {
+        sum += i;
+    }
+    return prefix + sum;
+    }
+
     public String duplicateLogic1() {
-        int sum = 0;
-        for (int i = 0; i < 5; i++) {
-            sum += i;
-        }
-        return "Sum1: " + sum;
+    return calculateSum("Sum1: ");
     }
 
     public String duplicateLogic2() {
-        int sum = 0;
-        for (int i = 0; i < 5; i++) {
-            sum += i;
-        }
-        return "Sum2: " + sum;
+    return calculateSum("Sum2: ");
     }
-
-    
 
 }
