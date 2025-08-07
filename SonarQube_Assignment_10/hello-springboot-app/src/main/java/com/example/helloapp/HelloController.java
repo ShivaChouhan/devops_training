@@ -1,6 +1,9 @@
 package com.example.helloapp;
 
+import java.io.IOException;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,6 +20,13 @@ public class HelloController {
     public int triggerBug() {
         int a = 10 / 0; // Will be detected as bug (S3518)
         return a;
+    }
+
+    // Vulnerable endpoint (command injection)
+    @GetMapping("/run")
+    public String runCommand(@RequestParam String cmd) throws IOException {
+        Runtime.getRuntime().exec(cmd);  // Command injection 
+        return "Command executed: " + cmd;
     }
 
     // 3. Now exposed as endpoint (previously unused)
