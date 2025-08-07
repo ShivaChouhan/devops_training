@@ -1,6 +1,9 @@
 package com.example.helloapp;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,11 +16,57 @@ public class HelloController {
     }
 
     // Will trigger S2068 (Hardcoded credentials)
-    @GetMapping("/login")
+     @GetMapping("/login")
     public String login() {
         String password = "admin123";
         String dbUrl = "jdbc:mysql://localhost:3306/db?user=root&password=root";
         return "Logged in with password: " + password;
+    }
+
+    // Will trigger S6418 (Hardcoded API key)
+    @GetMapping("/payment")
+    public String processPayment() {
+        String apiKey = "sk_live_1234567890abcdef";
+        return "Processed with key: " + apiKey;
+    }
+
+    // Will trigger S4502 (Missing CSRF protection)
+    @PostMapping("/transfer")
+    public String moneyTransfer() {
+        return "Transfer completed";
+    }
+
+    // Will trigger S5326 (Plaintext password storage simulation)
+    @GetMapping("/storePassword")
+    public String storePassword() {
+        String userPassword = "plaintextPassword";
+        // Simulate storage
+        return "Stored password: " + userPassword.hashCode();
+    }
+
+    // Duplication examples (will trigger S4144)
+    @GetMapping("/report1")
+    public String generateReport1() {
+        // 10+ line block
+        List<String> data = List.of("A", "B", "C");
+        StringBuilder output = new StringBuilder();
+        output.append("Report 1\n--------\n");
+        for (String item : data) {
+            output.append("- ").append(item).append("\n");
+        }
+        return output.toString();
+    }
+
+    @GetMapping("/report2")
+    public String generateReport2() {
+        // Duplicate of report1 (10+ lines)
+        List<String> data = List.of("X", "Y", "Z");
+        StringBuilder output = new StringBuilder();
+        output.append("Report 2\n--------\n");
+        for (String item : data) {
+            output.append("- ").append(item).append("\n");
+        }
+        return output.toString();
     }
 
     // Bug example - will be detected in Bugs section
