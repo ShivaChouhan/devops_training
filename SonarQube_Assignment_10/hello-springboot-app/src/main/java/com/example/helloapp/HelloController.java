@@ -1,9 +1,6 @@
 package com.example.helloapp;
 
-import java.security.MessageDigest;
-
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,12 +25,6 @@ public class HelloController {
     }
 
     
-    public String vulnerableSQL(@RequestParam String userInput) {
-        String query = "SELECT * FROM users WHERE username = '" + userInput + "'";
-        return "Running query: " + query; // SQL injection risk
-    }
-
-    
     public void unusedMethod() {
         int x = 42; // Unused variable
     }
@@ -55,10 +46,6 @@ public class HelloController {
         return "Sum2: " + sum;
     }
 
-    public String weakEncryption() throws Exception {
-        MessageDigest md = MessageDigest.getInstance("MD5"); // Weak encryption
-        md.update("password".getBytes());
-        byte[] digest = md.digest();
-        return new String(digest);
-    }
+    
+
 }
