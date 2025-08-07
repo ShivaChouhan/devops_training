@@ -70,11 +70,11 @@ public class HelloController {
     }
 
     // Bug example - will be detected in Bugs section
-    @GetMapping("/bug")
-    public int triggerBug() {
-        int a = 10 / 0; // Bug - division by zero (S3518)
-        return a;
-    }
+    // @GetMapping("/bug")
+    // public int triggerBug() {
+    //     int a = 10 / 0; // Bug - division by zero (S3518)
+    //     return a;
+    // }
 
   
     // Code smell example - unused method
