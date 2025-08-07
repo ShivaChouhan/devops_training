@@ -6,56 +6,48 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    // 1. Will be detected as BUG (S3518 - Division by zero)
-    @GetMapping("/bug") 
-    public int triggerBug() {
-        return 10 / 0;
+    // 1. Original endpoint
+    @GetMapping("/hello")
+    public String sayHello() {
+        return "Hello this is my Java application.";
     }
 
-    // 2. Will be detected as VULNERABILITY (S2068 - Hardcoded password)
+    // 2. Now exposed as endpoint (previously unused)
+    @GetMapping("/trigger-bug")
+    public int triggerBug() {
+        int a = 10 / 0; // Will be detected as bug (S3518)
+        return a;
+    }
+
+    // 3. Now exposed as endpoint (previously unused)
     @GetMapping("/login")
     public String login() {
-        String password = "admin123"; // Critical vulnerability
-        return "Logged in with: " + password;
+        String password = "admin123"; // Will be detected as vulnerability (S2068)
+        return "Logged in with password: " + password;
     }
 
-    // 3. Will be detected as VULNERABILITY (S6437 - Hardcoded API key)
-    @GetMapping("/api")
-    public String apiEndpoint() {
-        String apiKey = "live_1234567890abcdef"; // Critical vulnerability
-        return "Using API key: " + apiKey;
+    // 4. Now exposed as endpoint (previously unused)
+    @GetMapping("/calculate-sum")
+    public String calculateSumWrapper() {
+        return calculateSum("Result: "); // Now the private method is used
     }
 
-    // 4. Will be detected as DUPLICATION (10+ identical lines)
-    @GetMapping("/process1")
-    public String processOne() {
-        // Start of duplicated block (10 lines)
-        String result = "";
+    private String calculateSum(String prefix) {
+        int sum = 0;
         for (int i = 0; i < 5; i++) {
-            result += "Processing item " + i + "\n";
-            result += "Step 1 completed\n";
-            result += "Step 2 completed\n";
+            sum += i;
         }
-        result += "Finalizing process\n";
-        return result;
-        // End of duplicated block
+        return prefix + sum;
     }
 
-    @GetMapping("/process2")
-    public String processTwo() {
-        // Duplicate of processOne (10 lines)
-        String result = "";
-        for (int i = 0; i < 5; i++) {
-            result += "Processing item " + i + "\n";
-            result += "Step 1 completed\n";
-            result += "Step 2 completed\n";
-        }
-        result += "Finalizing process\n";
-        return result;
+    // 5. Duplicate logic endpoints
+    @GetMapping("/logic1")
+    public String duplicateLogic1() {
+        return calculateSum("Sum1: ");
     }
 
-    // 5. Will be detected as CODE SMELL (S1172 - Unused method)
-    public void unusedHelper() {
-        System.out.println("This is never used");
+    @GetMapping("/logic2")
+    public String duplicateLogic2() {
+        return calculateSum("Sum2: ");
     }
 }
