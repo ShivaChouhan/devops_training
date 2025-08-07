@@ -12,6 +12,14 @@ public class HelloController {
         return "Hello this is my Java application.";
     }
 
+    // Will trigger S2068 (Hardcoded credentials)
+    @GetMapping("/login")
+    public String login() {
+        String password = "admin123";
+        String dbUrl = "jdbc:mysql://localhost:3306/db?user=root&password=root";
+        return "Logged in with password: " + password;
+    }
+
     // Bug example - will be detected in Bugs section
     @GetMapping("/bug")
     public int triggerBug() {
