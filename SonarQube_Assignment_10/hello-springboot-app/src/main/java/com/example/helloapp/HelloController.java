@@ -12,38 +12,64 @@ public class HelloController {
         return "Hello this is my Java application.";
     }
 
-    
+    // Bug example - will be detected in Bugs section
+    @GetMapping("/bug")
     public int triggerBug() {
-        int a = 10 / 0; // Bug - division by zero
+        int a = 10 / 0; // Bug - division by zero (S3518)
         return a;
     }
 
-    
+    // Vulnerability example - will be detected in Vulnerabilities section
+    @GetMapping("/login")
     public String login() {
-        String password = "admin123"; // Vulnerability - hardcoded password
+        String password = "admin123"; // Vulnerability - hardcoded password (S2068)
+        String apiKey = "1234-5678-9012"; // Vulnerability - hardcoded API key (S6418)
         return "Logged in with password: " + password;
     }
 
-    
+    // Code smell example - unused method
     public void unusedMethod() {
-        int x = 42; // Unused variable
+        int x = 42; // Unused variable (S1481)
+        System.out.println("This method is never used");
     }
 
-    
-    private String calculateSum(String prefix) {
-    int sum = 0;
-    for (int i = 0; i < 5; i++) {
-        sum += i;
-    }
-    return prefix + sum;
-    }
-
+    // Duplication example (more substantial to trigger detection)
+    @GetMapping("/sum1")
     public String duplicateLogic1() {
-    return calculateSum("Sum1: ");
+        int[] numbers = {1, 2, 3, 4, 5};
+        int total = 0;
+        for (int num : numbers) {
+            total += num;
+        }
+        return "Total1: " + total;
     }
 
+    @GetMapping("/sum2")
     public String duplicateLogic2() {
-    return calculateSum("Sum2: ");
+        int[] numbers = {1, 2, 3, 4, 5};
+        int total = 0;
+        for (int num : numbers) {
+            total += num;
+        }
+        return "Total2: " + total;
     }
 
+    // Another duplication pattern
+    @GetMapping("/processA")
+    public String processA() {
+        String input = "demo";
+        String result = input.toUpperCase();
+        result = result.trim();
+        result = result.concat("_A");
+        return result;
+    }
+
+    @GetMapping("/processB")
+    public String processB() {
+        String input = "test";
+        String result = input.toUpperCase();
+        result = result.trim();
+        result = result.concat("_B");
+        return result;
+    }
 }
