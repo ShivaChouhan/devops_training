@@ -38,14 +38,14 @@ public class HelloController {
         return "Sum1: " + sum;
     }
 
-    public String duplicateLogic1() {
+    public String duplicateLogic2() {
         int sum = 0;
         for (int i = 0; i < 5; i++) {
             sum += i;
         }
-        return "Sum1: " + sum;
+        return "Sum2: " + sum;
     }
 
-
+    
 
 }
