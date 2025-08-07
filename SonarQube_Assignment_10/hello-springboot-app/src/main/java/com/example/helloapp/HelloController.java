@@ -40,6 +40,14 @@ public class HelloController {
         return prefix + sum;
     }
 
+    private String calculateSum2(String prefix) {
+        int sum = 0;
+        for (int i = 0; i < 5; i++) {
+            sum += i;
+        }
+        return prefix + sum;
+    }
+
     // 5. Duplicate logic endpoints
     @GetMapping("/logic1")
     public String duplicateLogic1() {
@@ -48,6 +56,6 @@ public class HelloController {
 
     @GetMapping("/logic2")
     public String duplicateLogic2() {
-        return calculateSum("Sum2: ");
+        return calculateSum2("Sum2: ");
     }
 }
