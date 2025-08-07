@@ -27,14 +27,7 @@ public class HelloController {
         return a;
     }
 
-    // Vulnerability example - will be detected in Vulnerabilities section
-    @GetMapping("/login")
-    public String login() {
-        String password = "admin123"; // Vulnerability - hardcoded password (S2068)
-        String apiKey = "1234-5678-9012"; // Vulnerability - hardcoded API key (S6418)
-        return "Logged in with password: " + password;
-    }
-
+  
     // Code smell example - unused method
     public void unusedMethod() {
         int x = 42; // Unused variable (S1481)
