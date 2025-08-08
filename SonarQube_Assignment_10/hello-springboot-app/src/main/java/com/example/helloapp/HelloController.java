@@ -22,12 +22,13 @@ public class HelloController {
         return a;
     }
 
-    // Vulnerable endpoint (command injection)
-    @GetMapping("/run")
+    
     public String runCommand(@RequestParam String cmd) throws IOException {
         Runtime.getRuntime().exec(cmd);  // Command injection 
-        return "Command executed: " + cmd;
+        String query = "SELECT * FROM users WHERE id = " + cmd;
+        return query;
     }
+
 
     // 3. Now exposed as endpoint (previously unused)
     @GetMapping("/login")
@@ -62,4 +63,6 @@ public class HelloController {
     public String duplicateLogic2() {
         return calculateSum2("Sum2: ");
     }
+
+    
 }
