@@ -1,9 +1,8 @@
 package com.example.helloapp;
 
-import java.io.IOException;
+import java.util.Scanner;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,8 +22,9 @@ public class HelloController {
     }
 
     
-    public String runCommand(@RequestParam String cmd) throws IOException {
-        Runtime.getRuntime().exec(cmd);  // Command injection 
+    public String runCommand()  {
+        Scanner sc=new Scanner(System.in);
+        String cmd=sc.nextLine();
         String query = "SELECT * FROM users WHERE id = " + cmd;
         return query;
     }
