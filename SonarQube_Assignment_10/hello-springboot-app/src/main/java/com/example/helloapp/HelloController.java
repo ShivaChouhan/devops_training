@@ -41,30 +41,7 @@ public class HelloController {
         }
         return prefix + sum;
     }
-
-    private String calculateSum3(String prefix) {
-        int sum = 0;
-        for (int i = 0; i < 5; i++) {
-            sum += i;
-        }
-        return prefix + sum;
-    }
-
-    private String calculateSum4(String prefix) {
-        int sum = 0;
-        for (int i = 0; i < 5; i++) {
-            sum += i;
-        }
-        return prefix + sum;
-    }
-
-    private String calculateSum5(String prefix) {
-        int sum = 0;
-        for (int i = 0; i < 5; i++) {
-            sum += i;
-        }
-        return prefix + sum;
-    }
+    
 
     // 5. Duplicate logic endpoints
     @GetMapping("/logic1")
@@ -75,18 +52,6 @@ public class HelloController {
     @GetMapping("/logic2")
     public String duplicateLogic2() {
         return calculateSum2("Sum2: ");
-    }
-    @GetMapping("/logic3")
-    public String duplicateLogic3() {
-        return calculateSum3("Sum2: ");
-    }
-    @GetMapping("/logic4")
-    public String duplicateLogic4() {
-        return calculateSum4("Sum2: ");
-    }
-    @GetMapping("/logic5")
-    public String duplicateLogic5() {
-        return calculateSum5("Sum2: ");
     }
 
     
