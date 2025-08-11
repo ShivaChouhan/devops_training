@@ -248,6 +248,7 @@ windows1 | SUCCESS => {
 }
 ```
 
+
 ### Phase 6: Playbook Execution
 
 #### 6.1 Run the Complete Playbook
