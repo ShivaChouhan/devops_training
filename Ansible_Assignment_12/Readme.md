@@ -159,6 +159,12 @@ after that set inbound rule in window ec2 for 5985
 
 #### 4.1 Create Directory Structure
 
+#### Command to create roles 
+``` bash
+ansible-galaxy init role_name
+
+```
+
 I return to the Ansible Control Node and create the following project structure:
 
 ```bash
@@ -210,7 +216,7 @@ server_3_windows ansible_host=<your window server_node Public IPv4 address>
 
 [winserver:vars]
 ansible_user=Administrator
-ansible_password=9?!jRK(X$RPjlShZUrYekUt?.1A@NHV4
+ansible_password=9?!**************HV4
 ansible_connection=winrm
 ansible_winrm_server_cert_validation=ignore
 ansible_port=5985
