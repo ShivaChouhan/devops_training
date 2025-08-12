@@ -31,4 +31,4 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        working-directory: ./SonarQube_Assignment_10/hello-springboot-app
+        
