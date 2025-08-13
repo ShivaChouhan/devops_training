@@ -14,4 +14,5 @@ def rule_check():
     print("4")
     print("5")
     print("6")
-    return 0
+    print("7")
+    
