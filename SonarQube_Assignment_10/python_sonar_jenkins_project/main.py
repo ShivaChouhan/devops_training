@@ -7,7 +7,7 @@ def subtract(a, b):
 def multiply(a, b):
     return a * b
 
-def rule_check():
+def rule_checkformorethancharacter():
     print("1")
     print("2")
     print("3")
