@@ -33,7 +33,8 @@ public class HelloController {
             int result = 10 / 0;
         } catch (Exception e) {
             // Use proper logging instead
-            logger.error("Error occurred during calculation", e);
+            System.out.println("Error occurred during calculation: " + e);
+            
         }
         return 42; // Placeholder return value
 
