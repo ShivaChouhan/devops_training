@@ -25,8 +25,18 @@ public class HelloController {
     // 2. Now exposed as endpoint (previously unused)
     @GetMapping("/trigger-bug")
     public int triggerBug() {
-        int a = 10 / 0; // Will be detected as bug (S3518)
-        return a;
+        // int a = 10 / 0; // Will be detected as bug (S3518)
+        // return a;
+
+         try {
+            // Some risky operation
+            int result = 10 / 0;
+        } catch (Exception e) {
+            // Use proper logging instead
+            logger.error("Error occurred during calculation", e);
+        }
+        return 42; // Placeholder return value
+
     }
 
     // 3. Now exposed as endpoint (previously unused)
