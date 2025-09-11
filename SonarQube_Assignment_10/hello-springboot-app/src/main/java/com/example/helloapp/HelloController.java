@@ -27,6 +27,7 @@ public class HelloController {
     public int triggerBug() {
         // int a = 10 / 0; // Will be detected as bug (S3518)
         // return a;
+        
 
          try {
             // Some risky operation
